@@ -34,6 +34,7 @@ const projectData: Record<string, any> = {
       'Conflict-Free Data Synchronization',
     ],
     video: 'https://drive.foodhub.com/external/file/bvmdgf70b9d2fc06c442eb333678e6680c3cd',
+    repos: ['franchisemultimenu'],
     stats: {
       uptime: '99.9%',
       branches: '150+',
@@ -56,6 +57,7 @@ const projectData: Record<string, any> = {
       'Cross-Platform Deployment (iOS/Android)',
     ],
     video: 'https://drive.foodhub.com/external/file/gj1f8e362f52491c44b0e80b36fdbbdc9469e',
+    repos: ['restaurant-management'],
     stats: {
       reach: '10k+ Users',
       latency: '<100ms',
@@ -78,6 +80,7 @@ const projectData: Record<string, any> = {
       'Redis-Optimized Inventory Management',
     ],
     video: 'https://drive.foodhub.com/external/file/lssrqb450728ae81e41ddb277d6dcb42a8f8c',
+    repos: ['restaurant-management-analytics'],
     stats: {
       concurrency: '50k+',
       latency: '<50ms',
@@ -104,6 +107,7 @@ const projectData: Record<string, any> = {
       { label: 'OrderCompletionTimeModal tests', url: 'https://github.com/uktech/mytakeaway2.0/pull/35062' }
     ],
     video: '',
+    repos: ['mytakeaway2.0'],
     stats: {
       components: 'Core UI',
       coverage: 'High Branch',
@@ -126,6 +130,7 @@ const projectData: Record<string, any> = {
       'Secure Multi-Tenant Authentication',
     ],
     video: '', // Placeholder since no specific video for this project was found
+    repos: ['smartkiosk', 'kiosk_backend'],
     stats: {
       reach: '1,200+ Kiosks',
       latency: '<500ms',
@@ -148,6 +153,7 @@ const projectData: Record<string, any> = {
       'Background Analysis Engine',
     ],
     video: 'https://drive.foodhub.com/external/file/t6tz379c0f16d879443ddb5b58b857b260def',
+    repos: ['smartkiosk', 'kiosk_backend'],
     stats: {
       speed: '<800ms',
       processing: 'On-Device',
@@ -170,6 +176,7 @@ const projectData: Record<string, any> = {
       'High-Confidence Test Integration',
     ],
     video: 'https://storybook.sitfoodhub.com/?path=/docs/components-divider--docs',
+    repos: ['foodhub-slice'],
     stats: {
       adoption: '343+ Files',
       fixes: '40+ Patterns',
@@ -200,9 +207,18 @@ export default async function ProjectPage({ params }: { params: { id: string } }
 
   return (
     <div className="container py-12 px-6 max-w-7xl animate-fade-in mx-auto">
-      <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold opacity-40 hover:opacity-100 transition-all mb-16 group text-foreground">
-        <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Project Showcase
-      </Link>
+      <div className="flex justify-between items-center mb-16">
+        <Link href="/" className="inline-flex items-center gap-2 text-sm font-bold opacity-40 hover:opacity-100 transition-all group text-foreground">
+          <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" /> Back to Project Showcase
+        </Link>
+        <div className="flex gap-2">
+          {project.repos && project.repos.map((repo: string) => (
+            <div key={repo} className="bg-brand-red text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg shadow-brand-red/20 opacity-90">
+              {repo}
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div className="max-w-4xl mx-auto">
         <h1 className="text-5xl md:text-7xl font-black mb-10 leading-[1.05] tracking-tighter">
