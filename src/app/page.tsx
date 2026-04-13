@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Shield, Smartphone, Zap, ArrowRight, ExternalLink, Code2, LayoutDashboard, TestTube2 } from 'lucide-react';
+import { Shield, Smartphone, Zap, ArrowRight, ExternalLink, Code2, LayoutDashboard, TestTube2, Eye, Layers } from 'lucide-react';
 import { GithubIcon } from '@/components/icons';
 
 const projects = [
@@ -51,6 +51,24 @@ const projects = [
     icon: LayoutDashboard,
     gradient: 'from-emerald-500/20 to-teal-500/20',
     tags: ['React Native', 'Firebase', 'Redux Saga'],
+  },
+  {
+    id: 'project6',
+    title: 'Face Recognition',
+    subtitle: 'Biometric Recognition System',
+    description: 'High-speed biometric identification system for Smart Kiosks, enabling seamless customer recognition and secure authentication.',
+    icon: Eye,
+    gradient: 'from-blue-500/20 to-cyan-500/20',
+    tags: ['Biometrics', 'Vision Camera', 'Node.js'],
+  },
+  {
+    id: 'project7',
+    title: 'UI Component Library',
+    subtitle: 'Design Systems & Components',
+    description: 'Robust UI library powering the Foodhub ecosystem. Centralized 343 legacy instances of fragmented separators into a single component.',
+    icon: Layers,
+    gradient: 'from-orange-500/20 to-red-500/20',
+    tags: ['Design Systems', 'Storybook', 'React Native'],
   },
 ];
 
@@ -174,15 +192,7 @@ export default function Home() {
         ))}
       </motion.div>
 
-      <motion.div 
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        className="py-16 border-t border-foreground/5 text-center opacity-40 sticky bottom-0 bg-background/50 backdrop-blur-sm w-full"
-      >
-        <p className="text-sm font-medium">
-          &copy; 2026 B.U.Naveen Raj | <span className="text-brand-red font-bold">Foodhub</span> Engineering
-        </p>
-      </motion.div>
+
     </div>
   );
 }

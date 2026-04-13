@@ -154,6 +154,28 @@ const projectData: Record<string, any> = {
       success: '99%+'
     }
   },
+  project7: {
+    title: 'UI Component Library',
+    fullTitle: 'Foodhub Slice - Standardized UI Systems',
+    github: 'https://github.com/uktech/foodhub-slice',
+    problem: 'fragmented legacy UI patterns across hundreds of files created significant design debt and maintenance challenges in the mytakeaway2.0 mobile app.',
+    solution: 'Engineered the "SliceUI" library, centralizing core components like the highly-configurable Divider to ensure ecosystem-wide consistency.',
+    architecture: 'Token-based design system supporting React Native and Web, with automated documentation via Storybook.',
+    achievements: 'Successfully replaced custom separators in 343 files with the new Divider component, streamlining the engineering workflow and UI fidelity.',
+    keyFeatures: [
+      'Multi-Platform Support (RN & Web)',
+      'Token-Mapped Thickness & Colors',
+      'Complex Line Patterns (Dashed/Dotted)',
+      'Performance Optimized (Memoized)',
+      'High-Confidence Test Integration',
+    ],
+    video: 'https://storybook.sitfoodhub.com/?path=/docs/components-divider--docs',
+    stats: {
+      adoption: '343+ Files',
+      fixes: '40+ Patterns',
+      env: 'Web & Mobile'
+    }
+  },
 };
 
 export async function generateStaticParams() {
@@ -164,6 +186,7 @@ export async function generateStaticParams() {
     { id: 'project4' },
     { id: 'project5' },
     { id: 'project6' },
+    { id: 'project7' },
   ];
 }
 

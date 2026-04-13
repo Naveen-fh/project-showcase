@@ -18,13 +18,6 @@ const Navbar = () => {
     <nav className="glass sticky top-0 z-50 py-4 px-6 mb-8 mt-4 mx-4 rounded-2xl">
       <div className="container flex justify-between items-center max-w-7xl mx-auto">
         <Link href="/" className="flex items-center gap-3 group">
-          <motion.div
-            whileHover={{ rotate: 90, scale: 1.1 }}
-            transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            className="p-2 bg-accent/10 rounded-xl"
-          >
-            <LayoutGrid className="w-6 h-6 text-accent" />
-          </motion.div>
           <div className="flex flex-col md:flex-row md:items-center md:gap-2">
             <span className="text-xl font-bold tracking-tight">
               B.U.Naveen Raj
