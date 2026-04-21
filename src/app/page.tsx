@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Shield, Smartphone, Zap, ArrowRight, ExternalLink, Code2, LayoutDashboard, TestTube2, Eye, Layers } from 'lucide-react';
+import { Shield, Smartphone, Zap, ArrowRight, ExternalLink, Code2, LayoutDashboard, TestTube2, Eye, Layers, MessageSquare } from 'lucide-react';
 import { GithubIcon } from '@/components/icons';
 
 const projects = [
@@ -69,6 +69,15 @@ const projects = [
     icon: Layers,
     gradient: 'from-orange-500/20 to-red-500/20',
     tags: ['Design Systems', 'Storybook', 'React Native'],
+  },
+  {
+    id: 'project9',
+    title: 'AI Chatbot Ordering',
+    subtitle: 'Preference-Aware Self-Ordering Assistant',
+    description: 'Conversational AI assistant embedded in the customer app that lets users discover menus, set dietary preferences, and place orders end-to-end through natural chat.',
+    icon: MessageSquare,
+    gradient: 'from-teal-500/20 to-cyan-500/20',
+    tags: ['React Native', 'Redux', 'LLM / NLP'],
   },
 ];
 

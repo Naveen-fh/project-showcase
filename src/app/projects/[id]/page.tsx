@@ -1,14 +1,14 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { 
-  ChevronLeft, 
-  Check, 
-  ArrowRight, 
-  Settings, 
-  AlertTriangle, 
-  Lightbulb, 
-  Layers, 
+import {
+  ChevronLeft,
+  Check,
+  ArrowRight,
+  Settings,
+  AlertTriangle,
+  Lightbulb,
+  Layers,
   Trophy,
   Video,
   GitPullRequest,
@@ -117,7 +117,7 @@ const projectData: Record<string, any> = {
   project5: {
     title: 'Operations Dashboard',
     fullTitle: 'Real-Time Kiosk Operations & Monitoring System',
-    github: 'https://github.com/Naveen-fh/smartkiosk',
+    github: 'https://github.com/uktech/SmartKiosk',
     problem: 'Managing a large fleet of self-service kiosks (1000+) proved difficult without a unified visibility layer. Identifying hardware failures, network drops, or software issues in real-time was reactive, leading to prolonged downtime and lost revenue.',
     solution: 'Engineered a comprehensive monitoring ecosystem that aggregates live health telemetry from distributed kiosks. Featuring a high-performance React Native dashboard and a robust Node.js backend to provide instantaneous alerts and system-wide visibility.',
     architecture: 'Built using a distributed architecture with a Node.js/Express backend for telemetry ingestion and a React Native (Expo) frontend for the dashboard. Leveraged Firebase for real-time data synchronization and Redux Saga for handling complex side effects and asynchronous data fetching.',
@@ -140,7 +140,7 @@ const projectData: Record<string, any> = {
   project6: {
     title: 'Face Recognition',
     fullTitle: 'Advanced Biometric Authentication & Face Recognition',
-    github: 'https://github.com/Naveen-fh/smartkiosk',
+    github: 'https://github.com/uktech/SmartKiosk',
     problem: 'Restaurant kiosks needed an automated and secure method to verify employee identities and recognize loyal customers without manual input, improving speed of service and personalization.',
     solution: 'Developed a sophisticated Face Recognition module for Smart Kiosks, leveraging high-performance computer vision algorithms to perform sub-second biometric matching at the edge.',
     architecture: 'Engineered using React Native Vision Camera for high-speed frame capture and a Node.js/TypeScript backend for secure biometric processing. The system implements a robust image storage service for optimized retrieval and matching.',
@@ -183,6 +183,30 @@ const projectData: Record<string, any> = {
       env: 'Web & Mobile'
     }
   },
+  project9: {
+    title: 'AI Chatbot Ordering',
+    fullTitle: 'Preference-Aware AI Self-Ordering Assistant',
+    github: 'https://github.com/uktech/customer_app_2.0',
+    problem: 'Customers browsing large multi-cuisine menus faced decision fatigue and high drop-off rates before reaching checkout. The existing ordering flow required manual menu browsing across multiple takeaways with no dietary-preference filtering or conversational guidance, leading to abandoned sessions and missed upsell opportunities.',
+    solution: 'Designed and built an AI-powered chatbot assistant embedded natively in the React Native customer app. The assistant understands natural-language preferences (dietary needs, cuisine type, budget), fetches menus across takeaways in parallel, and guides the user through a full self-ordering journey — from discovery to cart — entirely within a chat interface.',
+    architecture: 'Built on React Native with a Redux-backed conversation state machine. A ChatScreen orchestrates multi-turn dialogue via a structured message history persisted in Redux. An LLM/NLP inference layer interprets user intent and maps it to structured API calls (menu fetch, cart mutation). A ChatModal wraps the experience for seamless modal presentation. Background fetch workers cancel in-flight requests on unmount to prevent state corruption.',
+    achievements: 'Architected the end-to-end chatbot feature from the Redux state model (conversation slices, active thread management) through the UI layer (animated message bubbles, typing indicators, order cards). Identified and resolved key reliability issues: user messages now persist to Redux before the assistant reply, conversation threads are preserved on re-open, and Markdown in assistant responses is rendered correctly rather than shown as raw asterisks.',
+    keyFeatures: [
+      'Natural-Language Dietary & Cuisine Preference Parsing',
+      'Cross-Takeaway Menu Discovery in a Single Thread',
+      'Persistent Conversation History (Redux)',
+      'Animated Message Bubbles & Typing Indicators',
+      'In-Chat Order Card with One-Tap Cart Add',
+      'Cancellable Background Menu Fetch Workers',
+    ],
+    video: '',
+    repos: ['customer_app_2.0'],
+    stats: {
+      surface: 'iOS & Android',
+      state: 'Redux Persisted',
+      UX: 'Conversational'
+    }
+  },
 };
 
 export async function generateStaticParams() {
@@ -194,6 +218,7 @@ export async function generateStaticParams() {
     { id: 'project5' },
     { id: 'project6' },
     { id: 'project7' },
+    { id: 'project9' },
   ];
 }
 
@@ -224,20 +249,20 @@ export default async function ProjectPage({ params }: { params: { id: string } }
         <h1 className="text-5xl md:text-7xl font-black mb-10 leading-[1.05] tracking-tighter">
           {project.fullTitle}
         </h1>
-        
+
         <div className="flex flex-wrap gap-4 mb-20">
-          <a 
-            href={project.github} 
-            target="_blank" 
+          <a
+            href={project.github}
+            target="_blank"
             rel="noopener noreferrer"
             className="btn btn-primary gap-3 text-white px-8"
           >
             <GithubIcon size={20} /> View Technical Source
           </a>
           {project.video && (
-            <a 
-              href={project.video} 
-              target="_blank" 
+            <a
+              href={project.video}
+              target="_blank"
               rel="noopener noreferrer"
               className="btn btn-glass gap-3 px-8 border-foreground/10"
             >
@@ -245,10 +270,10 @@ export default async function ProjectPage({ params }: { params: { id: string } }
             </a>
           )}
           {project.prLinks && project.prLinks.map((pr: any, index: number) => (
-            <a 
+            <a
               key={index}
-              href={pr.url} 
-              target="_blank" 
+              href={pr.url}
+              target="_blank"
               rel="noopener noreferrer"
               className="btn btn-glass gap-3 px-8 border-accent/20 text-accent group"
             >
@@ -327,7 +352,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
 
           <section className="pt-20 border-t border-foreground/5">
             <Link href="/" className="flex items-center gap-4 text-xl font-black text-accent group w-fit">
-              Explore More Technical Portfolios 
+              Explore More Technical Portfolios
               <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform" />
             </Link>
           </section>
