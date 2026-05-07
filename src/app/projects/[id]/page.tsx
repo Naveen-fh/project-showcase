@@ -185,26 +185,28 @@ const projectData: Record<string, any> = {
   },
   project9: {
     title: 'AI Chatbot Ordering',
-    fullTitle: 'Preference-Aware AI Self-Ordering Assistant',
+    fullTitle: 'Guardrails-First AI Ordering & Support Assistant',
     github: 'https://github.com/uktech/customer_app_2.0',
-    problem: 'Customers browsing large multi-cuisine menus faced decision fatigue and high drop-off rates before reaching checkout. The existing ordering flow required manual menu browsing across multiple takeaways with no dietary-preference filtering or conversational guidance, leading to abandoned sessions and missed upsell opportunities.',
-    solution: 'Designed and built an AI-powered chatbot assistant embedded natively in the React Native customer app. The assistant understands natural-language preferences (dietary needs, cuisine type, budget), fetches menus across takeaways in parallel, and guides the user through a full self-ordering journey — from discovery to cart — entirely within a chat interface.',
-    architecture: 'Built on React Native with a Redux-backed conversation state machine. A ChatScreen orchestrates multi-turn dialogue via a structured message history persisted in Redux. An LLM/NLP inference layer interprets user intent and maps it to structured API calls (menu fetch, cart mutation). A ChatModal wraps the experience for seamless modal presentation. Background fetch workers cancel in-flight requests on unmount to prevent state corruption.',
-    achievements: 'Architected the end-to-end chatbot feature from the Redux state model (conversation slices, active thread management) through the UI layer (animated message bubbles, typing indicators, order cards). Identified and resolved key reliability issues: user messages now persist to Redux before the assistant reply, conversation threads are preserved on re-open, and Markdown in assistant responses is rendered correctly rather than shown as raw asterisks.',
+    problem: 'Customers on the Foodhub app faced two compounding pain points: decision fatigue when browsing large multi-cuisine menus, and frustrating dead ends when raising complaints, tracking orders, or handling refunds through self-service. There was no safe way to expose a conversational AI to real users at scale — an unguarded LLM risked hallucinated refund promises, missed medical escalations (food poisoning, severe allergies), and unpredictable responses to high-stakes support queries. The challenge was building an assistant that felt intelligent and conversational while being completely safe and deterministic for critical flows.',
+    solution: 'Designed and built a guardrails-first AI assistant deeply integrated into the React Native customer app. Every user intent is routed through a deterministic guardrule engine before the LLM is ever invoked. Twelve domain-specific guardrule flows govern order complaints, delivery tracking, refunds, menu discovery, account management, and escalations — with template responses served directly for high-stakes intents. GPT-4o-mini handles only open-ended conversational turns that the guardrail layer has cleared as safe. A semantic RAG pipeline (OpenAI embeddings + Supabase pgvector) powers intent resolution at scale, and Zoho SalesIQ provides seamless live-agent handoff for unresolvable or high-severity issues.',
+    architecture: 'Multi-tier system: a React Native ChatScreen backed by a Redux conversation state machine syncs sessions to a Node.js/Express backend. The guardrule engine loads 12 domain JSON rule files from Supabase, performs keyword/regex intent matching, and falls back to vector similarity search (text-embedding-3-small, stored in pgvector via match_faq_documents RPC). Matched intents resolve to either a direct template response (no LLM) or a structured system prompt fed to GPT-4o-mini with a 14-turn history window and 1,024-token output cap. A dedicated complaint triage module handles food-safety and order issues through a deterministic UI-driven Q&A sequence (order picker → packaging question → recipient question → resolution chips), entirely bypassing the LLM. On escalation, Zoho SalesIQ receives a serialised chat transcript and structured complaint metadata via the Visitor API.',
+    achievements: 'Architected the full guardrails engine from JSON schema design through Supabase-backed storage and runtime intent matching. Built the vector search pipeline end-to-end: OpenAI embedding generation, pgvector indexing with embedding_changelog cost tracking, and similarity-based fallback routing with a configurable confidence threshold. Designed the multi-step complaint triage UX that handles missing items, wrong orders, and food-safety incidents without LLM involvement — each triage answer stored and forwarded to the live agent on escalation. Implemented the Zoho SalesIQ handoff pipeline including transcript serialisation, complaint context packaging, and Visitor API integration. Wired real-time context injection so every LLM call includes live basket state, pending and past order history, store config, and an 80-item menu snapshot, keeping responses grounded in actual app state rather than hallucinated data.',
     keyFeatures: [
-      'Natural-Language Dietary & Cuisine Preference Parsing',
-      'Cross-Takeaway Menu Discovery in a Single Thread',
-      'Persistent Conversation History (Redux)',
-      'Animated Message Bubbles & Typing Indicators',
-      'In-Chat Order Card with One-Tap Cart Add',
-      'Cancellable Background Menu Fetch Workers',
+      'Guardrails-First Engine: 12 Domain Flows (Complaints, Delivery, Refunds, Menu, Account)',
+      'Semantic RAG: OpenAI text-embedding-3-small + Supabase pgvector Intent Matching',
+      'Deterministic Complaint Triage — No LLM for Missing Items, Food Safety & Refunds',
+      'Live Agent Escalation via Zoho SalesIQ with Full Transcript & Complaint Metadata',
+      'Real-Time Context Injection: Basket, Order History, Menu Snapshot & Store Config',
+      'Symptom-Aware Menu Scoring (Light Food Boosted for Unwell Users)',
+      'LLM Quick-Reply Chip Generation (3 Contextual Suggestions per Turn)',
+      'Persistent Sessions in Supabase (chat_sessions + chat_messages + embedding_changelog)',
     ],
     video: '',
     repos: ['customer_app_2.0'],
     stats: {
-      surface: 'iOS & Android',
-      state: 'Redux Persisted',
-      UX: 'Conversational'
+      flows: '12 Guardrail Flows',
+      model: 'GPT-4o-mini + RAG',
+      escalation: 'Zoho SalesIQ'
     }
   },
 };

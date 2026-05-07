@@ -73,11 +73,11 @@ const projects = [
   {
     id: 'project9',
     title: 'AI Chatbot Ordering',
-    subtitle: 'Preference-Aware Self-Ordering Assistant',
-    description: 'Conversational AI assistant embedded in the customer app that lets users discover menus, set dietary preferences, and place orders end-to-end through natural chat.',
+    subtitle: 'Guardrails-First AI Ordering & Support',
+    description: 'Production AI assistant with a deterministic guardrule engine across 12 domain flows, semantic RAG via pgvector, structured complaint triage, and Zoho SalesIQ live-agent escalation — all before the LLM is ever invoked.',
     icon: MessageSquare,
     gradient: 'from-teal-500/20 to-cyan-500/20',
-    tags: ['React Native', 'Redux', 'LLM / NLP'],
+    tags: ['GPT-4o-mini', 'pgvector / RAG', 'Guardrails'],
   },
 ];
 
