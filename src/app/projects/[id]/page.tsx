@@ -201,7 +201,7 @@ const projectData: Record<string, any> = {
       'LLM Quick-Reply Chip Generation (3 Contextual Suggestions per Turn)',
       'Persistent Sessions in Supabase (chat_sessions + chat_messages + embedding_changelog)',
     ],
-    video: '',
+    video: 'https://drive.foodhub.com/external/file/v5qqacfcc1971a3604480975a7bb91f803504',
     repos: ['customer_app_2.0'],
     stats: {
       flows: '12 Guardrail Flows',
