@@ -13,7 +13,8 @@ import {
   Video,
   GitPullRequest,
   TestTube2,
-  Eye
+  Eye,
+  MessageSquare
 } from 'lucide-react';
 import { GithubIcon } from '@/components/icons';
 
@@ -203,6 +204,10 @@ const projectData: Record<string, any> = {
     ],
     video: 'https://drive.foodhub.com/external/file/v5qqacfcc1971a3604480975a7bb91f803504',
     repos: ['customer_app_2.0'],
+    demos: [
+      { label: 'Full Technical Guide', url: '/demos/chatbot.html' },
+      { label: 'Ops Flow Guide', url: '/demos/customer-app-2.0-chatbot.html' },
+    ],
     stats: {
       flows: '12 Guardrail Flows',
       model: 'GPT-4o-mini + RAG',
@@ -280,6 +285,17 @@ export default async function ProjectPage({ params }: { params: { id: string } }
               className="btn btn-glass gap-3 px-8 border-accent/20 text-accent group"
             >
               <GitPullRequest size={20} className="group-hover:rotate-12 transition-transform" /> {pr.label}
+            </a>
+          ))}
+          {project.demos && project.demos.map((demo: any, index: number) => (
+            <a
+              key={index}
+              href={demo.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-glass gap-3 px-8 border-accent/20 text-accent group"
+            >
+              <MessageSquare size={20} className="group-hover:rotate-12 transition-transform" /> {demo.label}
             </a>
           ))}
         </div>

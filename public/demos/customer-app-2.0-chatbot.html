@@ -1,0 +1,3036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chatbot Flow Documentation — Operations Guide</title>
+<style>
+  :root {
+    --brand: #ED515B;
+    --brand-dark: #c43a44;
+    --brand-light: #fdf2f3;
+    --blue: #3b82f6;
+    --blue-light: #eff6ff;
+    --green: #22c55e;
+    --green-light: #f0fdf4;
+    --orange: #f97316;
+    --orange-light: #fff7ed;
+    --purple: #8b5cf6;
+    --purple-light: #f5f3ff;
+    --yellow: #eab308;
+    --yellow-light: #fefce8;
+    --teal: #14b8a6;
+    --teal-light: #f0fdfa;
+    --gray: #6b7280;
+    --gray-light: #f9fafb;
+    --gray-border: #e5e7eb;
+    --text: #111827;
+    --text-muted: #6b7280;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f3f4f6;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ─── HEADER ─── */
+  .site-header {
+    background: var(--brand);
+    color: white;
+    padding: 32px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(237,81,91,0.25);
+  }
+  .site-header h1 { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+  .site-header p { font-size: 14px; opacity: 0.85; margin-top: 4px; }
+  .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ─── LAYOUT ─── */
+  .layout { display: flex; min-height: 100vh; }
+
+  /* ─── SIDEBAR NAV ─── */
+  .sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: white;
+    border-right: 1px solid var(--gray-border);
+    padding: 24px 0;
+    position: sticky;
+    top: 88px;
+    height: calc(100vh - 88px);
+    overflow-y: auto;
+  }
+  .sidebar h2 {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    padding: 0 20px 8px;
+    border-bottom: 1px solid var(--gray-border);
+    margin-bottom: 8px;
+  }
+  .nav-group { margin-bottom: 4px; }
+  .nav-group-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    padding: 12px 20px 4px;
+  }
+  .sidebar a {
+    display: block;
+    padding: 7px 20px;
+    font-size: 13px;
+    color: var(--text);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all 0.15s;
+  }
+  .sidebar a:hover {
+    background: var(--brand-light);
+    border-left-color: var(--brand);
+    color: var(--brand);
+  }
+  .sidebar a .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+
+  /* ─── MAIN CONTENT ─── */
+  .main { flex: 1; padding: 32px 40px; max-width: 1100px; }
+
+  /* ─── SECTION ─── */
+  .section { margin-bottom: 48px; }
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    max-width: 700px;
+  }
+
+  /* ─── FLOW CARD ─── */
+  .flow-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--gray-border);
+    margin-bottom: 24px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .flow-card-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    border-bottom: 1px solid var(--gray-border);
+  }
+  .flow-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+    line-height: 1;
+    margin-top: 2px;
+  }
+  .flow-card-header-text h3 {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .flow-card-header-text p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+  .flow-card-body { padding: 20px; }
+
+  /* ─── TRIGGER BOX ─── */
+  .trigger-box {
+    background: var(--gray-light);
+    border: 1px solid var(--gray-border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+  .trigger-box-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .trigger-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    background: white;
+    border: 1px solid var(--gray-border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: var(--text);
+    font-style: italic;
+  }
+
+  /* ─── FLOWCHART ─── */
+  .flowchart { display: flex; flex-direction: column; gap: 0; }
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+  }
+  .flow-step-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 40px;
+  }
+  .step-circle {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .step-line {
+    width: 2px;
+    flex: 1;
+    min-height: 16px;
+    background: var(--gray-border);
+    margin: 2px 0;
+  }
+  .flow-step-right {
+    flex: 1;
+    padding-bottom: 16px;
+    padding-left: 12px;
+    padding-top: 4px;
+  }
+  .step-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .step-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .step-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .option-chip {
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+
+  /* ─── OUTCOMES ─── */
+  .outcomes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .outcome {
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .outcome-icon { font-size: 16px; }
+
+  /* ─── BRANCH ─── */
+  .branch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .branch-card {
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid;
+    font-size: 13px;
+  }
+  .branch-card-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+
+  /* ─── OVERVIEW TABLE ─── */
+  .overview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .overview-table th {
+    background: var(--gray-light);
+    font-weight: 700;
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 2px solid var(--gray-border);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .overview-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--gray-border);
+    vertical-align: top;
+  }
+  .overview-table tr:last-child td { border-bottom: none; }
+  .overview-table tr:hover td { background: var(--gray-light); }
+
+  /* ─── COLORS ─── */
+  .c-red { color: var(--brand); }
+  .c-blue { color: var(--blue); }
+  .c-green { color: var(--green); }
+  .c-orange { color: var(--orange); }
+  .c-purple { color: var(--purple); }
+  .c-teal { color: var(--teal); }
+  .c-yellow { color: var(--yellow); }
+
+  .bg-red { background: var(--brand); }
+  .bg-blue { background: var(--blue); }
+  .bg-green { background: var(--green); }
+  .bg-orange { background: var(--orange); }
+  .bg-purple { background: var(--purple); }
+  .bg-teal { background: var(--teal); }
+  .bg-yellow { background: var(--yellow); }
+  .bg-gray { background: var(--gray); }
+
+  .border-red { border-color: #fca5a5; background: var(--brand-light); }
+  .border-blue { border-color: #93c5fd; background: var(--blue-light); }
+  .border-green { border-color: #86efac; background: var(--green-light); }
+  .border-orange { border-color: #fdba74; background: var(--orange-light); }
+  .border-purple { border-color: #c4b5fd; background: var(--purple-light); }
+  .border-teal { border-color: #5eead4; background: var(--teal-light); }
+  .border-yellow { border-color: #fde047; background: var(--yellow-light); }
+
+  /* ─── INFO BOX ─── */
+  .info-box {
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    font-size: 13px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .info-box-icon { font-size: 18px; flex-shrink: 0; }
+
+  /* ─── EXACT MESSAGE BOX ─── */
+  .msg-box {
+    background: var(--gray-light);
+    border-left: 3px solid var(--brand);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-top: 8px;
+    font-size: 13px;
+  }
+  .msg-box .msg-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+  }
+  .msg-box .msg-text {
+    font-family: 'SF Mono', Consolas, 'Courier New', monospace;
+    font-size: 12.5px;
+    white-space: pre-wrap;
+    color: var(--text);
+    background: white;
+    border: 1px solid var(--gray-border);
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  .msg-box .msg-cond {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .msg-box .msg-cond strong { color: var(--text); }
+  .msg-box + .msg-box { margin-top: 6px; }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    border: none;
+    border-top: 2px solid var(--gray-border);
+    margin: 32px 0;
+  }
+
+  /* ─── SPECIAL CALLOUT ─── */
+  .callout {
+    border-radius: 10px;
+    border: 1px solid;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13px;
+  }
+  .callout-icon { font-size: 20px; flex-shrink: 0; }
+  .callout-title { font-weight: 700; margin-bottom: 4px; font-size: 14px; }
+
+  /* ─── MULTI-INTENT ─── */
+  .queue-viz {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 12px 0;
+  }
+  .queue-item {
+    background: white;
+    border: 2px solid var(--gray-border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    position: relative;
+  }
+  .queue-item.active {
+    border-color: var(--brand);
+    background: var(--brand-light);
+    color: var(--brand);
+  }
+  .queue-arrow { font-size: 18px; color: var(--text-muted); }
+
+  /* ─── SCROLLBAR ─── */
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--gray-border); border-radius: 2px; }
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--gray-light); }
+  ::-webkit-scrollbar-thumb { background: var(--gray-border); border-radius: 5px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--brand); }
+
+  /* ─── BACK NAV ─── */
+  .back-nav {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 200;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid var(--gray-border);
+    border-radius: 999px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transition: all 0.15s;
+  }
+  .back-nav:hover { border-color: var(--brand); color: var(--brand); }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { padding: 20px; }
+    .site-header { padding: 20px; position: static; }
+  }
+</style>
+</head>
+<body>
+<a href="/projects/project9" class="back-nav">&larr; Back to Project Showcase</a>
+
+<div class="site-header">
+  <h1>🤖 Chatbot Flow Documentation</h1>
+  <p>How the Food Assistant handles every type of customer message — step by step</p>
+  <span class="badge">Operations Reference Guide</span>
+  <a href="file:///Users/naveen/Downloads/chatbot.html" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.4);border-radius:8px;padding:7px 16px;font-size:13px;font-weight:600;color:white;text-decoration:none;">
+    📄 Full Technical Breakdown (Architecture, Guardrails, Zoho, API) ↗
+  </a>
+</div>
+
+<div class="layout">
+
+  <!-- ─── SIDEBAR ─── -->
+  <nav class="sidebar">
+    <h2>Contents</h2>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Overview</div>
+      <a href="#how-it-works"><span class="dot" style="background:var(--gray)"></span>How It Works</a>
+      <a href="#all-flows"><span class="dot" style="background:var(--gray)"></span>All Flows at a Glance</a>
+      <a href="#guardrail-flows"><span class="dot" style="background:var(--teal)"></span>Guardrail Flows (Backend)</a>
+      <a href="#ai-personality"><span class="dot" style="background:var(--purple)"></span>AI Personality & Tone</a>
+      <a href="#security-limits"><span class="dot" style="background:var(--orange)"></span>Security & Rate Limits</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Order Flows</div>
+      <a href="#order-status"><span class="dot" style="background:var(--blue)"></span>Order Status</a>
+      <a href="#order-complaint"><span class="dot" style="background:var(--brand)"></span>Order Complaint</a>
+      <a href="#missing-items"><span class="dot" style="background:var(--orange)"></span>Missing Items</a>
+      <a href="#wrong-order"><span class="dot" style="background:var(--orange)"></span>Wrong Order</a>
+      <a href="#order-modification"><span class="dot" style="background:var(--teal)"></span>Order Modification</a>
+      <a href="#order-cancel"><span class="dot" style="background:var(--gray)"></span>Order Cancellation</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Delivery Flows</div>
+      <a href="#delivery-late"><span class="dot" style="background:var(--brand)"></span>Late Delivery</a>
+      <a href="#delivery-not-arrived"><span class="dot" style="background:var(--brand)"></span>Order Not Arrived</a>
+      <a href="#delivery-address"><span class="dot" style="background:var(--blue)"></span>Delivery Address</a>
+      <a href="#pickup-late"><span class="dot" style="background:var(--yellow)"></span>Customer Running Late</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Complaint Flows</div>
+      <a href="#food-quality"><span class="dot" style="background:var(--orange)"></span>Food Quality</a>
+      <a href="#food-poisoning"><span class="dot" style="background:var(--brand)"></span>Food Poisoning</a>
+      <a href="#staff-complaint"><span class="dot" style="background:var(--purple)"></span>Staff/Driver Complaint</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Money Flows</div>
+      <a href="#refunds"><span class="dot" style="background:var(--green)"></span>Refunds</a>
+      <a href="#payments"><span class="dot" style="background:var(--blue)"></span>Payments</a>
+      <a href="#voucher"><span class="dot" style="background:var(--yellow)"></span>Voucher Issues</a>
+      <a href="#loyalty"><span class="dot" style="background:var(--purple)"></span>Loyalty Points</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-title">Other Flows</div>
+      <a href="#group-order"><span class="dot" style="background:var(--teal)"></span>Group / Bulk Order</a>
+      <a href="#live-agent"><span class="dot" style="background:var(--brand)"></span>Live Agent Request</a>
+      <a href="#account"><span class="dot" style="background:var(--blue)"></span>Account & Address</a>
+      <a href="#menu"><span class="dot" style="background:var(--green)"></span>Menu & Recommendations</a>
+      <a href="#general"><span class="dot" style="background:var(--gray)"></span>General / Greetings</a>
+      <a href="#multi-intent"><span class="dot" style="background:var(--purple)"></span>Multiple Issues at Once</a>
+    </div>
+  </nav>
+
+  <!-- ─── MAIN ─── -->
+  <main class="main">
+
+    <!-- ─── HOW IT WORKS ─── -->
+    <section class="section" id="how-it-works">
+      <div class="section-title">🧠 How the Chatbot Works</div>
+      <div class="section-desc">Before diving into each flow, here is how the chatbot decides what to do with every customer message.</div>
+
+      <div class="flow-card">
+        <div class="flow-card-body">
+          <div class="flowchart">
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-blue">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Customer sends a message</div>
+                <div class="step-desc">The customer types anything — "where is my order", "I want a refund", "hi", etc.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-orange">2</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Security & token budget check</div>
+                <div class="step-desc">Before the AI is called, the message is scanned for attack patterns (prompt injection, XSS, SQL injection, etc.) and the session's token usage is checked against the 30,000-token budget. If either check fails, the message is blocked and an amber <strong>"AI agents busy"</strong> banner appears — with a direct link to contact live agents. Live agent requests always bypass this check.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-purple">3</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">AI reads the message and classifies the intent</div>
+                <div class="step-desc">The AI figures out <em>what the customer wants</em> and assigns a confidence score. It also checks which order the customer is talking about.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-teal">4</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Chatbot picks the right flow</div>
+                <div class="step-desc">Based on the intent, the chatbot routes the customer into the correct flow (e.g. complaint flow, refund flow, order status flow).</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-blue">5</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Chatbot asks questions and gathers information</div>
+                <div class="step-desc">The flow asks the customer relevant questions (e.g. which order, which items, how delivered) to fully understand the issue.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">6</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Resolve or escalate</div>
+                <div class="step-desc">The chatbot either resolves the issue automatically (e.g. issue a refund, provide info) or connects the customer to a live agent.</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="info-box border-blue c-blue">
+            <div class="info-box-icon">ℹ️</div>
+            <div><strong>Topic switching:</strong> If a customer is mid-flow and suddenly asks about something different, the chatbot detects this and asks "You seem to be asking about something new — would you like to switch topics?" before changing flow. This prevents accidental flow resets.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── ALL FLOWS ─── -->
+    <section class="section" id="all-flows">
+      <div class="section-title">📋 All Flows at a Glance</div>
+      <div class="section-desc">Quick reference — every flow, what triggers it, and how it ends.</div>
+
+      <div class="flow-card">
+        <div class="flow-card-body" style="padding:0;">
+          <table class="overview-table">
+            <thead>
+              <tr>
+                <th>Flow</th>
+                <th>Customer says something like…</th>
+                <th>Ends with</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Order Status</strong></td>
+                <td>"Where is my order", "Has my order been accepted", "What's my ETA"</td>
+                <td>Status update, restaurant phone number, or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Order Complaint — Missing Item</strong></td>
+                <td>"My burger is missing", "Something wasn't in my bag"</td>
+                <td>Refund, replacement, or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Order Complaint — Wrong Order</strong></td>
+                <td>"I got the wrong food", "This isn't what I ordered"</td>
+                <td>Refund, replacement, or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Order Complaint — Food Quality</strong></td>
+                <td>"Food was cold", "The pizza was burnt", "Food tasted bad"</td>
+                <td>Refund, replacement, or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Order Complaint — Spoiled Food</strong></td>
+                <td>"Food was off", "Smelled rotten", "Packaging was broken"</td>
+                <td>Refund, replacement, or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Order Not Arrived</strong></td>
+                <td>"My order hasn't arrived", "Still waiting", "Order not here"</td>
+                <td>Wait advice + restaurant phone, or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Late Delivery</strong></td>
+                <td>"Order is late", "Past the ETA", "Driver going wrong way"</td>
+                <td>Wait advice + restaurant call, or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Food Poisoning</strong></td>
+                <td>"Got food poisoning", "I was sick after eating", "Went to hospital"</td>
+                <td>Always escalated to live agent (high priority)</td>
+              </tr>
+              <tr>
+                <td><strong>Staff / Driver Complaint</strong></td>
+                <td>"Driver was rude", "Restaurant staff aggressive", "Made me uncomfortable"</td>
+                <td>Always escalated to live agent (high priority)</td>
+              </tr>
+              <tr>
+                <td><strong>Order Modification</strong></td>
+                <td>"Add an item to my order", "Change my order", "Cancel my order"</td>
+                <td>Instructions to call restaurant, or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Order Cancellation Reason</strong></td>
+                <td>"Why was my order cancelled", "Order got cancelled"</td>
+                <td>Cancellation reason or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Refunds</strong></td>
+                <td>"I want a refund", "Where is my refund", "Money not returned"</td>
+                <td>Automated refund or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Payments</strong></td>
+                <td>"Charged twice", "Payment failed", "How much did I pay", "Pay-by-link expired"</td>
+                <td>Payment breakdown/status shown, or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Voucher Issue</strong></td>
+                <td>"Voucher not working", "Promo code invalid", "Discount didn't apply"</td>
+                <td>Explanation or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Loyalty Points</strong></td>
+                <td>"Where are my points", "Didn't get stamps", "Redeem points"</td>
+                <td>Points info or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Delivery Address</strong></td>
+                <td>"Which address was this delivered to", "What address did you use"</td>
+                <td>Address shown or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Customer Running Late</strong></td>
+                <td>"I'll be late to collect", "Running late to pickup"</td>
+                <td>Message sent to restaurant</td>
+              </tr>
+              <tr>
+                <td><strong>Group / Bulk Order</strong></td>
+                <td>"Group order", "Bulk order for event", "Catering for 50 people"</td>
+                <td>Specialist response or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Live Agent Request</strong></td>
+                <td>"Talk to a human", "Live agent please", "Speak to someone"</td>
+                <td>Connected to live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Account & Address</strong></td>
+                <td>"Change my address", "Delete my account", "Login problem"</td>
+                <td>Guided steps or live agent</td>
+              </tr>
+              <tr>
+                <td><strong>Menu & Recommendations</strong></td>
+                <td>"What should I order", "Vegetarian options", "Recommend something"</td>
+                <td>AI recommendation</td>
+              </tr>
+              <tr>
+                <td><strong>General / Greetings</strong></td>
+                <td>"Hi", "Thanks", "App not working", "Feedback"</td>
+                <td>Friendly reply or guidance</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── GUARDRAIL FLOWS ─── -->
+    <section class="section" id="guardrail-flows">
+      <div class="section-title">🛡️ Guardrail Flows (Backend Rules)</div>
+      <div class="section-desc">These are structured rule sets stored in the backend database. Each flow has its own set of intents and guardrails — the chatbot matches the customer's message against these rules to stay on-topic and give consistent answers within each flow.</div>
+
+      <div class="callout border-teal" style="background:var(--teal-light);color:#0f766e;">
+        <div class="callout-icon">💡</div>
+        <div>
+          <div class="callout-title">What are guardrail flows?</div>
+          Think of guardrails as a rulebook for each topic. When a customer is in the "Refunds" flow, the guardrails make sure the chatbot only discusses refund-related things — it won't drift into unrelated topics. Each flow has its own table in the backend that the ops/admin team can update.
+        </div>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-card-body" style="padding:0;">
+          <table class="overview-table">
+            <thead>
+              <tr>
+                <th>Flow Name</th>
+                <th>Backend Table ID</th>
+                <th>What It Covers</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Account</strong></td>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">account</code></td>
+                <td>Profile edits, address changes, password reset</td>
+              </tr>
+              <tr>
+                <td><strong>Delivery</strong></td>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">delivery</code></td>
+                <td>Tracking, ETA, delivery windows, diagnostics</td>
+              </tr>
+              <tr>
+                <td><strong>General Enquiry</strong></td>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">genralenquiry</code></td>
+                <td>General Q&amp;A about the platform</td>
+              </tr>
+              <tr>
+                <td><strong>Menu</strong></td>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">menu</code></td>
+                <td>Menu items, allergens, recommendations</td>
+              </tr>
+              <tr>
+                <td><strong>Order Complaint</strong></td>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">order_complaint</code></td>
+                <td>Missing items, wrong order, spoiled food, illness</td>
+              </tr>
+              <tr>
+                <td><strong>Order Modification</strong></td>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">order_modification</code></td>
+                <td>Cancel or change an active order</td>
+              </tr>
+              <tr>
+                <td><strong>Order Status</strong></td>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">order_status</code></td>
+                <td>"Where is my order?", progress tracking</td>
+              </tr>
+              <tr>
+                <td><strong>Promotions</strong></td>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">promotions</code></td>
+                <td>Loyalty points, voucher codes</td>
+              </tr>
+              <tr>
+                <td><strong>Payments</strong></td>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">payments</code></td>
+                <td>Double charge, failed payment, duplicate auth</td>
+              </tr>
+              <tr>
+                <td><strong>Refunds</strong></td>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">refunds</code></td>
+                <td>Refund status and refund requests</td>
+              </tr>
+              <tr>
+                <td><strong>Edge Cases</strong></td>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">edgecases</code></td>
+                <td>Out-of-scope questions, abuse, policy violations</td>
+              </tr>
+              <tr>
+                <td><strong>Security Rules</strong></td>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">security_rules</code></td>
+                <td>Safety, data security, custom rules</td>
+              </tr>
+              <tr>
+                <td><strong>Voucher</strong></td>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">voucher</code></td>
+                <td>Coupon and promo code issues</td>
+              </tr>
+              <tr>
+                <td><strong>Delivery Address</strong></td>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">delivery_address</code></td>
+                <td>Which address was used, address confirmation</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="info-box border-blue c-blue" style="margin-top:0;">
+        <div class="info-box-icon">ℹ️</div>
+        <div><strong>How it connects to the flows above:</strong> Every detailed flow in this document (order complaint, refunds, etc.) is backed by one of these guardrail tables. The table controls what questions the chatbot is allowed to answer within that topic. If a question falls outside the guardrail, the chatbot either redirects or escalates to a live agent.</div>
+      </div>
+    </section>
+
+    <!-- ─── AI PERSONALITY & TONE ─── -->
+    <section class="section" id="ai-personality">
+      <div class="section-title">🎭 AI Personality &amp; Tone Rules</div>
+      <div class="section-desc">The chatbot is governed by a 10-rule personality block embedded in every system prompt. These rules make it feel like a real support person — not a scripted bot.</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">🎭</div>
+          <div class="flow-card-header-text">
+            <h3>Core Personality Rules</h3>
+            <p>Applied to every message the AI generates — cannot be overridden by customer input</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+          <div class="flowchart">
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-purple">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Empathy first, action second</div>
+                <div class="step-desc">Acknowledge the situation before jumping to solutions. A person feels heard before they feel helped.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-purple">2</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">No hollow affirmations</div>
+                <div class="step-desc">Words like <em>"Certainly!", "Absolutely!", "Of course!", "Great question!", "Happy to help!"</em> are banned. They signal a bot, not a person.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-purple">3</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Short, direct replies</div>
+                <div class="step-desc">Responses are kept concise. No multi-paragraph essays. One clear point per message whenever possible.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-purple">4</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Varied openings — no "Thanks —" starters</div>
+                <div class="step-desc">"Thanks —" openers are removed throughout the codebase. Replies don't start with the same phrase twice in a row. Dynamic AI generation is used to vary message openers.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-purple">5</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Human closers</div>
+                <div class="step-desc">Messages end naturally — not always with "Let me know if there's anything else I can help with!" (which is banned as a filler closer). The AI uses context-specific endings.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-purple">6</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Use the customer's name naturally</div>
+                <div class="step-desc">When a name is available, it's used occasionally — not in every message, which would feel unnatural.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-purple">7</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">"Sorry" is used with intent — not as filler</div>
+                <div class="step-desc">"I'm sorry" is reserved for situations where something genuinely went wrong (safety, serious complaints). Routine messages don't open with apologies. "Frustrating" is a banned word.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-purple">8</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Context-aware live agent &amp; re-entry messages</div>
+                <div class="step-desc">When connecting to a live agent, the wait message is generated with full context — the order number, restaurant name, and the type of issue. When a customer returns from a live agent session, the welcome-back message references what they were just dealing with, not a generic opener.</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="info-box border-purple c-purple" style="margin-top:8px;">
+            <div class="info-box-icon">💡</div>
+            <div><strong>Quick-reply chips</strong> also follow these rules — they are written as natural phrases a real person would type, not button labels like "Yes / No / Cancel".</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">🚫</div>
+          <div class="flow-card-header-text">
+            <h3>Banned Phrases &amp; Words</h3>
+            <p>Hard-coded exclusions across all AI-generated text</p>
+          </div>
+        </div>
+        <div class="flow-card-body" style="padding: 0;">
+          <table class="overview-table">
+            <thead>
+              <tr>
+                <th>Banned phrase / word</th>
+                <th>Why</th>
+                <th>What to use instead</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><em>"Certainly!", "Absolutely!", "Of course!"</em></td>
+                <td>Hollow affirmations — signal bot, not person</td>
+                <td>Jump straight to the reply</td>
+              </tr>
+              <tr>
+                <td><em>"Thanks —" (as opener)</em></td>
+                <td>Repetitive and filler</td>
+                <td>Varied context-first openings</td>
+              </tr>
+              <tr>
+                <td><em>"I'm really sorry" (as generic opener)</em></td>
+                <td>Dilutes genuine apology</td>
+                <td>Reserve for safety/serious complaints only</td>
+              </tr>
+              <tr>
+                <td><em>"frustrating"</em></td>
+                <td>Feels patronising</td>
+                <td>Describe the specific issue directly</td>
+              </tr>
+              <tr>
+                <td><em>"Let me know if there's anything else I can help with!"</em></td>
+                <td>Robotic filler closer</td>
+                <td>Context-specific endings or nothing</td>
+              </tr>
+              <tr>
+                <td><em>"Happy to help!"</em></td>
+                <td>Hollow affirmation</td>
+                <td>Jump straight to the reply</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SECURITY & RATE LIMITS ─── -->
+    <section class="section" id="security-limits">
+      <div class="section-title">🔒 Security &amp; Rate Limits</div>
+      <div class="section-desc">Two layers of protection run on every message — a client-side scan and a backend middleware check. When limits are hit, customers see an amber banner rather than a broken experience.</div>
+
+      <div class="callout border-orange" style="background:var(--orange-light);color:#7c2d12;">
+        <div class="callout-icon">⚠️</div>
+        <div>
+          <div class="callout-title">What the customer sees when limits are hit</div>
+          An amber <strong>"AI agents busy"</strong> banner appears at the top of the chat. It includes a <strong>"Contact live agents directly"</strong> link so the customer is never left stuck. The text input is disabled until the session resets.
+        </div>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">🛡️</div>
+          <div class="flow-card-header-text">
+            <h3>Two-Layer Security Model</h3>
+          </div>
+        </div>
+        <div class="flow-card-body">
+          <div class="flowchart">
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-orange">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Client-side attack scan (before API call)</div>
+                <div class="step-desc">35 attack patterns checked on the device before anything is sent to the server. Covers: prompt injection, jailbreak attempts, XSS, SQL injection, SSRF, data exfiltration commands.</div>
+                <div class="step-options" style="margin-top:8px;">
+                  <span class="option-chip border-green c-green">Clean → proceed to AI</span>
+                  <span class="option-chip border-red c-red">Attack detected → block + amber banner</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-orange">2</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Token budget check (per session)</div>
+                <div class="step-desc">Each session has a <strong>30,000-token budget</strong>. Token usage is estimated before each AI call and tracked after each response. Approaching or exceeding the limit triggers the amber banner.</div>
+                <div class="step-options" style="margin-top:8px;">
+                  <span class="option-chip border-green c-green">Under budget → proceed</span>
+                  <span class="option-chip border-red c-red">Budget exceeded → amber banner shown</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-orange">3</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Backend rate limiter (server middleware)</div>
+                <div class="step-desc">The API server enforces <strong>30 requests per minute</strong> per session/IP. This prevents abuse of the AI endpoint from automated tools. When the AI itself returns a rate-limited signal (<code>AI_RATE_LIMITED</code>), the flow falls back gracefully rather than crashing.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">4</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Live agent requests always bypass security checks</div>
+                <div class="step-desc">If a customer says "talk to a human" or clicks a live agent button — even mid-banner, even at the token limit — the live agent connection path is always available. No customer is left with zero options.</div>
+                <div class="outcomes" style="margin-top:8px;">
+                  <div class="outcome border-green c-green"><span class="outcome-icon">✅</span> Live agent path always open</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">🗄️</div>
+          <div class="flow-card-header-text">
+            <h3>Backend Database Tables (Supabase)</h3>
+            <p>What gets logged and tracked for security</p>
+          </div>
+        </div>
+        <div class="flow-card-body" style="padding:0;">
+          <table class="overview-table">
+            <thead>
+              <tr>
+                <th>Table</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">security_rules</code></td>
+                <td>35+ attack patterns — type, severity, action (block/log/warn)</td>
+              </tr>
+              <tr>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">security_events</code></td>
+                <td>Audit log of every blocked message — session ID, pattern matched, timestamp</td>
+              </tr>
+              <tr>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">token_budgets</code></td>
+                <td>Per-session token usage — current count vs 30,000 limit</td>
+              </tr>
+              <tr>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">security_event_summary</code></td>
+                <td>View — aggregated attack stats for reporting</td>
+              </tr>
+              <tr>
+                <td><code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">sessions_near_budget</code></td>
+                <td>View — sessions approaching the 30k token limit (ops monitoring)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- ════════════════════════════════════════════
+         ORDER FLOWS
+    ═══════════════════════════════════════════════ -->
+
+    <!-- ─── ORDER STATUS ─── -->
+    <section class="section" id="order-status">
+      <div class="section-title"><span>📦</span> Order Status Flow</div>
+      <div class="section-desc">Customer wants to know where their order is, if it's been accepted, or when it will arrive.</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">📦</div>
+          <div class="flow-card-header-text">
+            <h3>Order Status Check</h3>
+            <p>Helps the customer get an update on their active order</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Where is my order?"</span>
+              <span class="tag">"Has it been accepted?"</span>
+              <span class="tag">"When will it arrive?"</span>
+              <span class="tag">"Check my order"</span>
+              <span class="tag">"Is my order on the way?"</span>
+              <span class="tag">"Track my order"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-blue">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Chatbot shows order picker</div>
+                <div class="step-desc">If the customer has multiple recent orders, they're shown a list to pick from. If there's only one recent order, it's selected automatically.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-blue">2</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Chatbot checks order status in the system</div>
+                <div class="step-desc">Looks up the order and shows the current status — pending, confirmed, out for delivery, delivered, or cancelled.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">3</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Response depends on order status (exact messages)</div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Order not found</div>
+                  <div class="msg-text">I wasn't able to pull up that order. Please try opening **My Orders** in the app, or say **live agent** and our team will help you out.</div>
+                  <div class="msg-cond">Condition: no matching order row.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">status ≥ 3.5 — Delivered / Collected</div>
+                  <div class="msg-text">Your order **{orderNo}** from **{name}** shows as **Delivered / Collected** on our end.
+
+If it hasn't actually turned up, just say the word and I'll help you raise a report right away.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">3 ≤ status &lt; 3.5, delivery order — Out for Delivery</div>
+                  <div class="msg-text">Good news — **{orderNo}** from **{name}** is **Out for Delivery**!
+
+Your order is with the driver and heading your way now.{etaLine}
+
+Anything else you need?</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">3 ≤ status &lt; 3.5, collection order — Ready for Collection</div>
+                  <div class="msg-text">Good news — **{orderNo}** from **{name}** is **Ready for Collection**!
+
+Your order is ready and waiting — head over whenever you're ready.{etaLine}
+
+Anything else you need?</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">status ≥ 2.5 — Being Prepared</div>
+                  <div class="msg-text">**{orderNo}** from **{name}** is being **Prepared** right now.
+
+The kitchen is on it — the ETA in the app will update once they have a clearer time.{etaLine}
+
+Want me to keep an eye on anything else?</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">status ≥ 2 — Accepted</div>
+                  <div class="msg-text">Your order has been **accepted** by the takeaway and is now being **prepared**.{etaPart} Let me know if you need anything else.</div>
+                  <div class="msg-cond"><code>{etaPart}</code> = " Your estimated delivery time is **{mins} minute(s)**." if minutes known, else empty.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">status ≥ 1 — Placed</div>
+                  <div class="msg-text">Your order is currently **placed** with the takeaway. The restaurant should accept your order within the next few minutes.{etaPart} If you have any questions, I'm here to help!</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">status &lt; 1 — Pending (default)</div>
+                  <div class="msg-text">**{orderNo}** from **{name}** is still **Pending**.
+
+We're waiting to hear back from the restaurant. If it's been more than a few minutes, let me know and I can look into it.{etaLine}</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">{etaLine} filler, appended above when an ETA exists</div>
+                  <div class="msg-text">mins ≤ 0 → "\nThe estimated arrival time is any moment now!"
+mins &gt; 0 → "\nThe estimated arrival time is in {mins} minute(s)."</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Customer says it still hasn't arrived after "Delivered" status</div>
+                  <div class="msg-text">Advises to wait 10–15 minutes and gives restaurant phone number, then offers to connect to a live agent if still not received.</div>
+                  <div class="msg-cond">Condition: customer re-confirms non-receipt after the "Delivered / Collected" message above — routes into the <a href="#delivery-not-arrived">Order Not Arrived</a> sub-flow, which always ends in live agent if the wait doesn't resolve it.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── ORDER COMPLAINT ─── -->
+    <section class="section" id="order-complaint">
+      <div class="section-title"><span>🚨</span> Order Complaint Flow</div>
+      <div class="section-desc">The main complaint flow. Handles food problems, missing items, wrong orders, spoiled food, illness, allergies, and payment issues. All complaint sub-types go through a structured triage to gather the right information before resolving.</div>
+
+      <div class="callout border-orange" style="background:var(--orange-light);">
+        <div class="callout-icon">⚠️</div>
+        <div>
+          <div class="callout-title">Triage system</div>
+          All complaints go through a step-by-step triage. The specific steps depend on the complaint type. The chatbot collects just enough information to make a fair decision — then offers a resolution.
+        </div>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">🎯</div>
+          <div class="flow-card-header-text">
+            <h3>Step 1 for every complaint type — "Pick which order" lead-in</h3>
+            <p>The lead sentence shown before "Which order is this about?" changes by issue kind (<code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">buildTriagePickOrderPrompt</code> in <code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">orderComplaintTriage.js</code>)</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+          <div class="msg-box">
+            <div class="msg-label">issueKind = illness</div>
+            <div class="msg-text">Really sorry you're feeling unwell. **If symptoms are severe**, please seek urgent care first.
+
+**Which order is this about?** Tap a recent order below or type the **order number**.</div>
+          </div>
+          <div class="msg-box">
+            <div class="msg-label">issueKind = allergy</div>
+            <div class="msg-text">Allergic reactions can be **serious** — if you have severe symptoms use **emergency services** now.
+
+**Which order is this about?** Tap a recent order below or type the **order number**.</div>
+          </div>
+          <div class="msg-box">
+            <div class="msg-label">issueKind = spoiled or quality</div>
+            <div class="msg-text">Really sorry about that — let me help get this sorted.
+
+**Which order is this about?** Tap a recent order below or type the **order number**.</div>
+          </div>
+          <div class="msg-box">
+            <div class="msg-label">issueKind = missing or wrong_order</div>
+            <div class="msg-text">Sorry about that — let me sort this out for you.
+
+**Which order is this about?** Tap a recent order below or type the **order number**.</div>
+          </div>
+          <div class="msg-box">
+            <div class="msg-label">issueKind = cancellation</div>
+            <div class="msg-text">Got it — let me help with that.
+
+**Which order is this about?** Tap a recent order below or type the **order number**.</div>
+          </div>
+          <div class="msg-box">
+            <div class="msg-label">any other / unrecognized issueKind (default)</div>
+            <div class="msg-text">Sorry to hear that — let me help.
+
+**Which order is this about?** Tap a recent order below or type the **order number**.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">📄</div>
+          <div class="flow-card-header-text">
+            <h3>Cancelled-order refund status phrases</h3>
+            <p>Shown when a complaint traces back to an already-cancelled order with a refund in progress (<code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">orderComplaintFlow.js</code>)</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+          <div class="msg-box">
+            <div class="msg-label">No refund log yet — wallet enabled</div>
+            <div class="msg-text">Your refund has been processed and should be in your Foodhub Wallet shortly. If you'd prefer the funds sent to your card, request a transfer through the Wallet section.</div>
+          </div>
+          <div class="msg-box">
+            <div class="msg-label">No refund log yet — wallet disabled</div>
+            <div class="msg-text">Your refund has been successfully processed back to your card. Please allow 3–5 business days for the funds to appear in your account.</div>
+          </div>
+          <div class="msg-box">
+            <div class="msg-label">Refund log exists — status phrase by refund_status_id</div>
+            <div class="msg-text">1 → Refund status: **queued** — it should start processing shortly.
+2 → Refund status: **in progress** — processing has started.
+3 → Refund status: **issue** — something went wrong while processing. Say **live agent** so our team can fix this.
+4 → Refund status: **completed** on our side.
+other → Refund status: **updating** — check **My orders** for the latest.</div>
+            <div class="msg-cond">If status is 3 (issue), no destination line is appended — customer is pointed straight to a live agent.</div>
+          </div>
+          <div class="msg-box">
+            <div class="msg-label">Destination line appended (only if status ≠ 3)</div>
+            <div class="msg-text">Wallet destination, completed: The amount should now be (or have been) credited to your **Foodhub Wallet** — open **Wallet** in the app.
+Wallet destination, not completed: When it completes, the **Foodhub Wallet** portion will show under **Wallet**.
+Card destination, completed: The **card** portion should return to the card you paid with (your bank often needs a few working days).
+Card destination, not completed: The **card** refund usually appears within about **3–5 working days** after it completes.
+Same-method destination: Refund is set to go back **the same way you paid**.
+Amount known: Reference amount: **{currencySym}{amt}**.</div>
+          </div>
+          <div class="msg-box">
+            <div class="msg-label">No cancelled order found on the account</div>
+            <div class="msg-text">We do not see a **cancelled order** on this account in the app yet — if it was **guest checkout**, open **My orders** after signing in, or check your email confirmation.</div>
+          </div>
+          <div class="msg-box">
+            <div class="msg-label">Cash order note (appended to the order summary)</div>
+            <div class="msg-text">This order was **cash** — no card refund applies; any issue is best raised with the **takeaway** directly.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-card" id="missing-items">
+        <div class="flow-card-header">
+          <div class="flow-icon">🍔</div>
+          <div class="flow-card-header-text">
+            <h3>Missing Items Complaint</h3>
+            <p>Customer says something from their order was not in the bag</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"My burger is missing"</span>
+              <span class="tag">"Items weren't in the bag"</span>
+              <span class="tag">"Missing fries"</span>
+              <span class="tag">"Didn't get my drink"</span>
+              <span class="tag">"Part of order not here"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-brand" style="background:var(--brand)">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Pick which order</div>
+                <div class="step-desc">Chatbot shows the customer's recent orders. Customer taps or types to select the affected order.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-brand" style="background:var(--brand)">2</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Select which items are missing</div>
+                <div class="step-desc">Chatbot shows the order receipt as a list. Customer taps each missing item. When done, they tap "Continue" or type "done".</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-brand" style="background:var(--brand)">3</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">How was the order delivered?</div>
+                <div class="msg-box">
+                  <div class="msg-label">Exact message shown</div>
+                  <div class="msg-text">Was the order **handed to you** or **left outside**? _(handed / left outside)_</div>
+                  <div class="msg-cond">Function: <code>buildDeliveryDropoffQuestion()</code>. Fixed text, no branching.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">4</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">"How would you like to resolve this?"</div>
+                <div class="msg-box">
+                  <div class="msg-label">Exact message + exact chip labels</div>
+                  <div class="msg-text">How would you like to resolve this?</div>
+                  <div class="msg-cond">Function: <code>buildResolutionStepMessage()</code>. Chips from <code>buildComplaintResolutionChips()</code>: <strong>"Request a refund"</strong> (<code>complaintAction: 'refund'</code>) and <strong>"Connect me to a live agent"</strong> (<code>complaintAction: 'live_agent'</code>).</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">5</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Customer taps "Request a refund"</div>
+                <div class="msg-box">
+                  <div class="msg-label">Exact message shown</div>
+                  <div class="msg-text">**{selectedItemLabel}** on order **{lbl}** from **{store}**. (left outside delivery)
+
+Connecting you to an agent to process your refund.</div>
+                  <div class="msg-cond">Function: <code>buildRefundSelfServeMessage()</code>. First line uses the tapped item's label, or "**Missing item**"/"**Wrong item**" if none selected; the "(left outside delivery)" suffix only appears if the customer answered <strong>left outside</strong> in step 3. The closing "Connecting you to an agent…" line is always appended — the refund itself is still processed by a live agent, not fully automated.</div>
+                </div>
+                <div class="outcomes">
+                  <div class="outcome border-green c-green"><span class="outcome-icon">💰</span> Refund for missing items (via agent)</div>
+                  <div class="outcome border-blue c-blue"><span class="outcome-icon">🔄</span> Replacement order</div>
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Connect to live agent</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="flow-card" id="wrong-order">
+        <div class="flow-card-header">
+          <div class="flow-icon">❌</div>
+          <div class="flow-card-header-text">
+            <h3>Wrong Order</h3>
+            <p>Customer received completely different food than what they ordered</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Got the wrong food"</span>
+              <span class="tag">"This isn't what I ordered"</span>
+              <span class="tag">"Wrong items delivered"</span>
+              <span class="tag">"Someone else's order"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-brand" style="background:var(--brand)">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Pick which order</div>
+                <div class="step-desc">Customer selects the affected order from their order history.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">2</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Resolution offered immediately</div>
+                <div class="step-desc">Wrong order goes straight to resolution — no extra triage steps needed.</div>
+                <div class="msg-box">
+                  <div class="msg-label">Exact message shown</div>
+                  <div class="msg-text">How would you like to resolve this?</div>
+                  <div class="msg-cond">Same <code>buildResolutionStepMessage()</code> as Missing Items, chips <strong>"Request a refund"</strong> / <strong>"Connect me to a live agent"</strong>.</div>
+                </div>
+                <div class="msg-box">
+                  <div class="msg-label">Customer taps "Request a refund"</div>
+                  <div class="msg-text">**Wrong item** on order **{lbl}** from **{store}**.
+
+Connecting you to an agent to process your refund.</div>
+                  <div class="msg-cond"><code>buildRefundSelfServeMessage()</code> with <code>issueKind: 'wrong_order'</code> — label defaults to "**Wrong item**" since no specific item is selected for this complaint type.</div>
+                </div>
+                <div class="outcomes">
+                  <div class="outcome border-green c-green"><span class="outcome-icon">💰</span> Full refund (via agent)</div>
+                  <div class="outcome border-blue c-blue"><span class="outcome-icon">🔄</span> Replacement</div>
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Live agent</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="flow-card" id="food-quality">
+        <div class="flow-card-header">
+          <div class="flow-icon">🌡️</div>
+          <div class="flow-card-header-text">
+            <h3>Food Quality Complaint</h3>
+            <p>Customer says food was cold, burnt, undercooked, or of poor quality</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Food was cold"</span>
+              <span class="tag">"Burger was burnt"</span>
+              <span class="tag">"Undercooked chicken"</span>
+              <span class="tag">"Food tasted bad"</span>
+              <span class="tag">"Pizza was soggy"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-orange">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Pick which order</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-orange">2</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Was the packaging intact?</div>
+                <div class="msg-box">
+                  <div class="msg-label">Exact message shown</div>
+                  <div class="msg-text">Was the packaging **sealed** when it arrived? _(sealed / opened / not sure)_</div>
+                  <div class="msg-cond">Function: <code>buildPackagingQuestion(issueKind)</code> — the <code>issueKind</code> parameter is accepted but not used (<code>void issueKind;</code> in source); this exact wording is shown for every complaint type that reaches this step, not customised per issue.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-orange">3</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Who received the order?</div>
+                <div class="msg-box">
+                  <div class="msg-label">Exact message shown</div>
+                  <div class="msg-text">Was the order handed to **you**, or did someone else receive it? _(me / someone else / not sure)_</div>
+                  <div class="msg-cond">Function: <code>buildRecipientQuestion()</code>. Fixed text, no branching.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">4</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">"How would you like to resolve this?"</div>
+                <div class="msg-box">
+                  <div class="msg-label">Exact message + chip labels</div>
+                  <div class="msg-text">How would you like to resolve this?</div>
+                  <div class="msg-cond"><code>buildResolutionStepMessage()</code> + chips <strong>"Request a refund"</strong> / <strong>"Connect me to a live agent"</strong>.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">5</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Outcome</div>
+                <div class="outcomes">
+                  <div class="outcome border-green c-green"><span class="outcome-icon">💰</span> Refund (via agent)</div>
+                  <div class="outcome border-blue c-blue"><span class="outcome-icon">🔄</span> Replacement</div>
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Live agent</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">🤢</div>
+          <div class="flow-card-header-text">
+            <h3>Spoiled Food</h3>
+            <p>Customer says food was off, smelled bad, or packaging was broken when received</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Food smelled off"</span>
+              <span class="tag">"Packaging was broken"</span>
+              <span class="tag">"Food was rotten"</span>
+              <span class="tag">"Clearly spoiled"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-red" style="background:var(--brand)">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Pick which order</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-red" style="background:var(--brand)">2</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Was the seal broken?</div>
+                <div class="msg-box">
+                  <div class="msg-label">Exact message shown</div>
+                  <div class="msg-text">**{lbl}** from **{name}**.
+
+Was the packaging **sealed** when it arrived? _(yes / no)_</div>
+                  <div class="msg-cond">Function: <code>buildSpoiltSealQuestion(orderRow)</code>. First line is the selected order (order number + restaurant name), then the sealed/not-sealed question.</div>
+                </div>
+                <div class="info-box border-orange" style="margin-top:8px;background:var(--orange-light);color:var(--orange)">
+                  <div class="info-box-icon">💡</div>
+                  If seal was NOT sealed (broken), chatbot escalates differently (restaurant responsibility vs delivery issue).
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-red" style="background:var(--brand)">3</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Had you started eating before you noticed?</div>
+                <div class="msg-box">
+                  <div class="msg-label">Exact message shown</div>
+                  <div class="msg-text">Had you started eating before you noticed the problem? _(yes / no)_</div>
+                  <div class="msg-cond">Function: <code>buildSpoiltEatenQuestion()</code>. Asked for <code>issueKind</code> = <strong>spoiled</strong> or <strong>illness</strong> — this third question does not appear on the Missing Items / Wrong Order / Food Quality paths, only the spoiled-food / food-poisoning path.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">4</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">"How would you like to resolve this?"</div>
+                <div class="msg-box">
+                  <div class="msg-label">Exact message + chip labels</div>
+                  <div class="msg-text">How would you like to resolve this?</div>
+                  <div class="msg-cond"><code>buildResolutionStepMessage()</code> + chips <strong>"Request a refund"</strong> / <strong>"Connect me to a live agent"</strong>.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">5</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Customer taps "Request a refund"</div>
+                <div class="msg-box">
+                  <div class="msg-label">Exact message shown</div>
+                  <div class="msg-text">**{'Food illness' if illness else 'Spoilt food'}** — order **{lbl}** from **{store}**. Seal was broken on arrival. Not eaten before noticing.
+
+Connecting you to an agent to process your refund.</div>
+                  <div class="msg-cond">Function: <code>buildRefundSelfServeMessage()</code>. "Seal was broken on arrival." only appends if the customer answered <strong>yes</strong> to the seal question; "Not eaten before noticing." only appends if they answered <strong>no</strong> to the eaten-before question. Either, both, or neither may appear.</div>
+                </div>
+                <div class="outcomes">
+                  <div class="outcome border-green c-green"><span class="outcome-icon">💰</span> Refund (via agent)</div>
+                  <div class="outcome border-blue c-blue"><span class="outcome-icon">🔄</span> Replacement</div>
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Live agent</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── DELIVERY FLOWS ─── -->
+    <section class="section" id="delivery-late">
+      <div class="section-title"><span>🕐</span> Late Delivery Flows</div>
+      <div class="section-desc">Covers orders that are running late, past their ETA, or not arrived at all.</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">⏱️</div>
+          <div class="flow-card-header-text">
+            <h3>Order Running Late</h3>
+            <p>Customer says order is late or hasn't arrived yet but system shows it as active</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"My order is late"</span>
+              <span class="tag">"Past the delivery time"</span>
+              <span class="tag">"Still waiting"</span>
+              <span class="tag">"Driver going the wrong way"</span>
+              <span class="tag">"Where is the driver?"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-red" style="background:var(--brand)">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Pick which order is late</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-red" style="background:var(--brand)">2</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Check order status</div>
+                <div class="branch-grid">
+                  <div class="branch-card border-orange c-orange">
+                    <div class="branch-card-label">Order still active</div>
+                    Advises customer to call the restaurant directly. Provides restaurant phone number. Asks to wait 10–15 mins before escalating.
+                  </div>
+                  <div class="branch-card border-red c-red">
+                    <div class="branch-card-label">System shows delivered but not received</div>
+                    Goes into "order not arrived" sub-flow (see below)
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-red" style="background:var(--brand)">3</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">If still not here after waiting</div>
+                <div class="step-desc">Customer comes back → chatbot connects to live agent immediately.</div>
+                <div class="outcomes">
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Live agent (priority)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="flow-card" id="delivery-not-arrived">
+        <div class="flow-card-header">
+          <div class="flow-icon">📭</div>
+          <div class="flow-card-header-text">
+            <h3>Order Not Arrived (system says delivered)</h3>
+            <p>System shows the order as delivered, but customer has not received it</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Order hasn't arrived"</span>
+              <span class="tag">"Says delivered but I haven't got it"</span>
+              <span class="tag">"Never received my order"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-red" style="background:var(--brand)">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">System confirms order marked as delivered</div>
+                <div class="step-desc">Chatbot explains: "Restaurants sometimes mark an order as out-for-delivery before it's actually arrived — it may still be on its way."</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-red" style="background:var(--brand)">2</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Wait advice + restaurant phone</div>
+                <div class="step-desc">Please wait 10–15 minutes. Restaurant phone number is provided so customer can call directly.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-red" style="background:var(--brand)">3</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Customer comes back — still not here</div>
+                <div class="step-desc">Chatbot confirms the situation and connects to live agent immediately.</div>
+                <div class="outcomes">
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Connected to live agent</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="flow-card" id="delivery-address">
+        <div class="flow-card-header">
+          <div class="flow-icon">📍</div>
+          <div class="flow-card-header-text">
+            <h3>Delivery Address Query</h3>
+            <p>Customer wants to know which address their order was delivered to</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Which address did you use?"</span>
+              <span class="tag">"Where was it delivered?"</span>
+              <span class="tag">"What address was on my order?"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-blue">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Pick which order</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">2</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Address shown to customer</div>
+                <div class="step-desc">Chatbot displays the delivery address that was on file for that order.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-card" id="pickup-late">
+        <div class="flow-card-header">
+          <div class="flow-icon">🚶</div>
+          <div class="flow-card-header-text">
+            <h3>Customer Running Late to Collect</h3>
+            <p>Customer ordered for collection (pickup) and they will be late arriving</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"I'll be late to collect"</span>
+              <span class="tag">"Running late for pickup"</span>
+              <span class="tag">"10 mins late to collect"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-yellow">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Pick which collection order</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">2</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Message sent to restaurant</div>
+                <div class="step-desc">Chatbot notifies the restaurant that the customer will be late, and advises the customer to call the restaurant directly if they'll be significantly delayed.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── FOOD POISONING ─── -->
+    <section class="section" id="food-poisoning">
+      <div class="section-title"><span>🏥</span> Food Poisoning</div>
+      <div class="section-desc">Treated as a high-priority complaint. Always escalated to a live agent — no automated resolution attempted.</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">🏥</div>
+          <div class="flow-card-header-text">
+            <h3>Food Poisoning / Serious Illness</h3>
+            <p>Customer reports becoming seriously ill after eating food from an order</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+
+          <div class="callout" style="border-color:#fca5a5;background:var(--brand-light);color:var(--brand-dark);">
+            <div class="callout-icon">🚨</div>
+            <div>
+              <div class="callout-title">Always escalated to live agent</div>
+              Food poisoning is never handled automatically. A live agent always takes over.
+            </div>
+          </div>
+
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Got food poisoning"</span>
+              <span class="tag">"Was sick after eating"</span>
+              <span class="tag">"Went to hospital"</span>
+              <span class="tag">"Vomiting after my order"</span>
+              <span class="tag">"Severe allergic reaction"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-red" style="background:var(--brand)">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Pick which order caused the illness</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-red" style="background:var(--brand)">2</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Immediate live agent connection</div>
+                <div class="step-desc">Chatbot expresses concern and connects straight to a live agent. Complaint is logged as high severity.</div>
+                <div class="outcomes">
+                  <div class="outcome border-red c-red"><span class="outcome-icon">🚨</span> Live agent — high severity ticket raised</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── STAFF COMPLAINT ─── -->
+    <section class="section" id="staff-complaint">
+      <div class="section-title"><span>😤</span> Staff / Driver Complaint</div>
+      <div class="section-desc">When a customer complains about the behaviour of a driver or restaurant staff member. Always escalated.</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">😤</div>
+          <div class="flow-card-header-text">
+            <h3>Driver or Staff Conduct Complaint</h3>
+            <p>Rude, aggressive, threatening, or inappropriate behaviour by a driver or restaurant staff</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+
+          <div class="callout" style="border-color:#c4b5fd;background:var(--purple-light);color:var(--purple);">
+            <div class="callout-icon">🚨</div>
+            <div>
+              <div class="callout-title">Always escalated to live agent — high severity</div>
+              Staff complaints are never handled by the chatbot alone. Formal complaint is raised.
+            </div>
+          </div>
+
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Driver was rude"</span>
+              <span class="tag">"Staff had bad attitude"</span>
+              <span class="tag">"Driver was aggressive"</span>
+              <span class="tag">"Made me feel uncomfortable"</span>
+              <span class="tag">"Threatening behaviour"</span>
+              <span class="tag">"Harassment"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-purple">1</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Immediate escalation to live agent</div>
+                <div class="step-desc">Chatbot apologises for the experience and connects to a live agent right away. Complaint is flagged as high severity to the operations team.</div>
+                <div class="outcomes">
+                  <div class="outcome border-purple c-purple"><span class="outcome-icon">🚨</span> Live agent — formal complaint raised</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── ORDER MODIFICATION ─── -->
+    <section class="section" id="order-modification">
+      <div class="section-title"><span>✏️</span> Order Modification</div>
+      <div class="section-desc">Customer wants to change, add to, or cancel an active order that hasn't been delivered yet.</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">✏️</div>
+          <div class="flow-card-header-text">
+            <h3>Modify Active Order</h3>
+            <p>Change items, add special instructions, or cancel before delivery</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Add an extra item"</span>
+              <span class="tag">"Change my order"</span>
+              <span class="tag">"Cancel my order"</span>
+              <span class="tag">"Remove something from my order"</span>
+              <span class="tag">"Special instructions"</span>
+            </div>
+          </div>
+
+          <div class="callout border-yellow" style="background:var(--yellow-light);color:#854d0e;">
+            <div class="callout-icon">⚠️</div>
+            <div>
+              <div class="callout-title">Only works for active (undelivered) orders</div>
+              If the order is already out for delivery or delivered, the chatbot explains it's too late to modify.
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-teal">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Pick active order to modify</div>
+                <div class="step-desc">Only live, undelivered orders are shown. Delivered orders are hidden.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-teal">2</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Advised to contact restaurant directly</div>
+                <div class="step-desc">Chatbot provides the restaurant phone number and advises the customer to call them directly to modify the order. For cancellations, live agent may be involved.</div>
+                <div class="outcomes">
+                  <div class="outcome border-teal c-teal"><span class="outcome-icon">📞</span> Restaurant phone number provided</div>
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Live agent for cancellations</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── ORDER CANCELLATION ─── -->
+    <section class="section" id="order-cancel">
+      <div class="section-title"><span>🚫</span> Order Cancellation Reason</div>
+      <div class="section-desc">Customer wants to know why their order was cancelled.</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">🚫</div>
+          <div class="flow-card-header-text">
+            <h3>Why Was My Order Cancelled?</h3>
+          </div>
+        </div>
+        <div class="flow-card-body">
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Why was my order cancelled?"</span>
+              <span class="tag">"Order got cancelled"</span>
+              <span class="tag">"Reason for cancellation?"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-gray">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Pick the cancelled order</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">2</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Cancellation reason shown</div>
+                <div class="step-desc">Chatbot explains the reason (restaurant rejected, payment failed, etc.) or connects to live agent if reason is unclear.</div>
+                <div class="outcomes">
+                  <div class="outcome border-green c-green"><span class="outcome-icon">ℹ️</span> Reason explained</div>
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Live agent if unclear</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── REFUNDS ─── -->
+    <section class="section" id="refunds">
+      <div class="section-title"><span>💰</span> Refunds Flow</div>
+      <div class="section-desc">Customer wants a refund or wants to check on an existing refund.</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">💰</div>
+          <div class="flow-card-header-text">
+            <h3>Refund Request or Status Check</h3>
+          </div>
+        </div>
+        <div class="flow-card-body">
+
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"I want a refund"</span>
+              <span class="tag">"Where is my refund?"</span>
+              <span class="tag">"Money not returned"</span>
+              <span class="tag">"Refund not received"</span>
+              <span class="tag">"Get my money back"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Chatbot asks: "Check refund status or request a new refund?"</div>
+                <div class="step-options">
+                  <span class="option-chip border-blue c-blue">Check status of existing refund</span>
+                  <span class="option-chip border-green c-green">Request a refund for an order</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">2</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Pick which order</div>
+                <div class="step-desc">Customer selects the order they want a refund for.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">3</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Outcome — exact messages by order state</div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Order was cancelled, refund_request_log already exists — wallet enabled</div>
+                  <div class="msg-text">We see your order **#{orderLabel}** was cancelled. Your refund has been added to your Foodhub Wallet and is available to use right away on your next order.
+
+If you'd rather have the money returned to your card, you can request a transfer through the Wallet section of your account. Once requested, the funds should reach your account within 3–5 business days.
+
+Please remember that refund transfers need to be requested within 30 days of the refund being issued.</div>
+                  <div class="msg-cond">Function: <code>buildRefundAssuranceMsg()</code>, key <code>walletAssurance</code>.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Same, but wallet disabled for this brand</div>
+                  <div class="msg-text">We see your order **#{orderLabel}** was cancelled. Your refund has been returned to your original payment method and should appear within 3–5 business days.</div>
+                  <div class="msg-cond">Key <code>nonWalletAssurance</code>.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Order was cancelled, no refund log yet (status inferred) — wallet enabled</div>
+                  <div class="msg-text">We see your order **#{orderLabel}** was cancelled. Your refund has been processed and should reach you within 3–5 business days, depending on your bank's processing times.
+
+For Foodhub orders, refunds are automatically credited to your Foodhub Wallet. If you'd prefer the refund to be sent to your bank account, simply add a card to your account and you'll see the option to transfer your wallet balance. Bank transfers can take up to 3–5 business days to appear in your account.
+
+If you paid using your Foodhub Wallet, the refund will be returned there automatically.</div>
+                  <div class="msg-cond">Function: <code>buildCancelledRefundInfoMsg()</code>, key <code>walletCancelledInfo</code>.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Same, but wallet disabled</div>
+                  <div class="msg-text">We see your order **#{orderLabel}** was cancelled. Your refund will be returned to your original payment method within 3–5 business days, depending on your bank's processing times.</div>
+                  <div class="msg-cond">Key <code>nonWalletCancelledInfo</code>.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Order is still active (not cancelled, not completed) — refund blocked</div>
+                  <div class="msg-text">Your order **#{idStr}** from **{storeName}** is currently **{statusName}**.
+
+Refunds can only be initiated for **cancelled** or **completed** orders. To get a refund you'll need to **cancel the order first** — a live agent can cancel it and process your refund straight away.</div>
+                  <div class="msg-cond">Condition: order status is between 1 and 4 (placed → out-for-delivery), i.e. neither cancelled nor completed. Same message shape is used when status is unknown/NaN, with <code>{statusName}</code> replaced by "active".</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Restaurant never responded — order auto-cancelled — wallet enabled</div>
+                  <div class="msg-text">Our order acceptance process includes notifying the takeaway promptly to minimise any time you have to wait. If no response is received, the order is automatically cancelled. Your refund has been added to your Foodhub Wallet and is available to use right away on your next order. If you'd rather have the money returned to your card, you can request a transfer through the Wallet section of your account within 30 days.</div>
+                  <div class="msg-cond">Function: <code>buildAutoCancelMsg()</code>, key <code>walletAutoCancel</code>.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Same, but wallet disabled</div>
+                  <div class="msg-text">Our order acceptance process includes notifying the takeaway promptly to minimise any time you have to wait. If no response is received, the order is automatically cancelled. Your refund will be processed back to your original payment method within 3–5 working days.</div>
+                  <div class="msg-cond">Key <code>nonWalletAutoCancel</code>.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Card/wallet refund breakdown known (from refund_options data)</div>
+                  <div class="msg-text">**Refund breakdown:**
+- **{sym}{cardAmount}** will be refunded to your **original payment card**.
+- **{sym}{walletAmount}** will be credited to your **Foodhub Wallet**.</div>
+                  <div class="msg-cond">Function: <code>buildRefundDestinationBlock()</code>. Only the card line shows if only card &gt; 0; only the wallet line shows if only wallet &gt; 0. If neither breakdown is available but a total is known, shows <strong>"**Refund amount:** **{sym}{total}** will be refunded."</strong> instead.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Partial refund on the receipt</div>
+                  <div class="msg-text">Partial: **Partial refund:** {sym}{refundedAmt} of {sym}{total} was refunded.
+Full: **Refund amount:** {sym}{refundedAmt}.</div>
+                  <div class="msg-cond">Function: <code>buildPartialRefundAmountLine()</code>. Shows "Partial refund" phrasing if refunded amount is more than 0.5p short of the order total, otherwise the plain "Refund amount" phrasing. Nothing shown if no refunded amount is recorded.</div>
+                </div>
+
+                <div class="info-box border-blue c-blue" style="margin-top:4px;">
+                  <div class="info-box-icon">🛠️</div>
+                  <div>All 12 template strings above are defaults (<code>DEFAULT_REFUND_TEMPLATES</code>). Ops can override any subset of them per-brand via <code>guardJson.meta.refundTemplates</code> in the <code>refunds</code> backend guardrail row — whatever isn't overridden falls back to the default text shown here.</div>
+                </div>
+
+                <div class="outcomes" style="margin-top:8px;">
+                  <div class="outcome border-green c-green"><span class="outcome-icon">💰</span> Automated refund status/assurance shown</div>
+                  <div class="outcome border-blue c-blue"><span class="outcome-icon">ℹ️</span> Status check shown</div>
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Live agent (order still active, or <code>refund_status_id === 3</code> issue)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── PAYMENTS ─── -->
+    <section class="section" id="payments">
+      <div class="section-title"><span>💳</span> Payments Flow</div>
+      <div class="section-desc">Customer has a question about how or how much they were charged — double charges, failed payments, pay-by-link status, or a breakdown of card vs. wallet payment. Backed by the <code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">payments</code> guardrail table. Source: <code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">paymentsFlow.js</code>.</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">💳</div>
+          <div class="flow-card-header-text">
+            <h3>Payment Question on an Order</h3>
+            <p>Routed by <code style="background:var(--gray-light);border:1px solid var(--gray-border);border-radius:4px;padding:2px 7px;font-size:12px;">intent.issueType</code> — five possible issue types</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"How much was I charged?"</span>
+              <span class="tag">"I was charged twice"</span>
+              <span class="tag">"My payment failed"</span>
+              <span class="tag">"Did my order even go through?"</span>
+              <span class="tag">"Pay-by-link isn't working"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-blue">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Pick which order</div>
+                <div class="step-desc">Order picker excludes cancelled orders (<code>status !== 5</code>), shows up to 5 most recent orders.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-blue">2</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Response depends on issue type</div>
+
+                <div class="msg-box">
+                  <div class="msg-label">issueType = amount_inquiry · card + wallet split (payment=12), both amounts known</div>
+                  <div class="msg-text">For **{label}** at **{storeName}**:
+Card: **{cardStr}** | Wallet: **{walletStr}**
+Total: **{totalStr}**
+
+If you have a concern, I can connect you to a live agent.</div>
+                  <div class="msg-cond">Condition: <strong>payment type 12</strong> (card+wallet split) and both <code>total_paid_by_card</code> / <code>total_paid_by_wallet</code> present. Total line only shown if total is known. If the breakdown is unavailable → returns <code>null</code>, which signals the caller to go straight to a live agent.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">issueType = amount_inquiry · pure card / Apple Pay / card-processing (payment type 1, 3, or 7)</div>
+                  <div class="msg-text">For **{label}** at **{storeName}**:
+Amount paid by card: **{totalStr}**
+
+If you have a concern about this charge, I can connect you to a live agent.</div>
+                  <div class="msg-cond">Condition: <code>payment</code> is <strong>1, 3, or 7</strong> and the order total is known. If total is unknown → falls back to <code>intent.fallbackTemplate</code>.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">issueType = amount_inquiry · pure wallet payment (payment=8)</div>
+                  <div class="msg-text">For **{label}** at **{storeName}**:
+**{totalStr}** was paid from your wallet — no card was charged.
+
+If you have a concern, I can connect you to a live agent.</div>
+                  <div class="msg-cond">Condition: <code>payment === 8</code> and total known. Unknown total → fallback template.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">issueType = amount_inquiry · cash on delivery (payment=0)</div>
+                  <div class="msg-text">For **{label}** at **{storeName}**:
+This order was paid **cash on delivery** — no card was charged.</div>
+                  <div class="msg-cond">Condition: <code>payment === 0</code>. No live-agent offer appended — nothing to dispute on a card.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">issueType = amount_inquiry · unknown payment type, total known</div>
+                  <div class="msg-text">For **{label}** at **{storeName}**:
+Total charged: **{totalStr}**
+
+For the exact card/wallet breakdown, I'll connect you to a live agent.</div>
+                  <div class="msg-cond">Condition: <code>payment</code> doesn't match any known type above but a total exists. If total is also unknown → returns <code>null</code> (live agent).</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">issueType = double_charge</div>
+                  <div class="msg-text">For **{label}** at **{storeName}**:
+Payment status: **{payStatus}**.
+I can see another very similar payment/order around the same time, so this may be a pending duplicate authorization.</div>
+                  <div class="msg-cond">Condition: each line is optional — <strong>payment status</strong> line shows if known; the <strong>duplicate hint</strong> line shows only if another order exists with the same total, same store, placed within <strong>15 minutes</strong> of this one. If neither line applies → falls back to <code>intent.fallbackTemplate</code>.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">issueType = failed_payment</div>
+                  <div class="msg-text">For **{label}** at **{storeName}**, payment status is **{payStatus}**.
+
+If this still looks wrong, I can connect you to a live agent.</div>
+                  <div class="msg-cond">Condition: payment status is known. If unknown → fallback template.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">issueType = payment_not_placed</div>
+                  <div class="msg-text">I found **{label}** at **{storeName}** and it currently shows as **{stTxt}**.
+
+Payment status: **{payStatus}**.</div>
+                  <div class="msg-cond">Condition: order status is a valid number. <code>{stTxt}</code> = "completed/delivered" (status ≥ 3.5), "accepted/preparing" (status ≥ 2), or "placed/pending" (below that). The payment-status line only appends if known. If status isn't a valid number → fallback template.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">issueType = pay_by_link_status</div>
+                  <div class="msg-text">For **{label}**, pay-by-link/payment status is **{payStatus}**. If the link expired, the store can resend a fresh link (valid for 10 minutes).</div>
+                  <div class="msg-cond">Condition: payment status known. Unknown → fallback template.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">No order selected, or issueType doesn't match any case above</div>
+                  <div class="msg-text">{intent.fallbackTemplate}</div>
+                  <div class="msg-cond">Condition: <code>fallbackTemplate</code> is supplied per-intent from the backend <code>payments</code> guardrail JSON — not a hardcoded string in code.</div>
+                </div>
+
+                <div class="outcomes" style="margin-top:4px;">
+                  <div class="outcome border-blue c-blue"><span class="outcome-icon">💳</span> Payment breakdown / status shown</div>
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Live agent if breakdown unavailable or customer still disputes</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── VOUCHER ─── -->
+    <section class="section" id="voucher">
+      <div class="section-title"><span>🎟️</span> Voucher / Promo Code Issues</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">🎟️</div>
+          <div class="flow-card-header-text">
+            <h3>Voucher Not Working</h3>
+          </div>
+        </div>
+        <div class="flow-card-body">
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Voucher not working"</span>
+              <span class="tag">"Promo code invalid"</span>
+              <span class="tag">"Discount didn't apply"</span>
+              <span class="tag">"Coupon code rejected"</span>
+            </div>
+          </div>
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-yellow">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Chatbot checks the voucher details</div>
+                <div class="step-desc">Asks for the voucher code if not already provided. Checks validity, expiry, and applicable restaurants.</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">2</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Explanation or escalation</div>
+                <div class="outcomes">
+                  <div class="outcome border-yellow" style="border-color:#fde047;background:var(--yellow-light);color:#854d0e;"><span class="outcome-icon">ℹ️</span> Reason explained (expired, wrong restaurant, min order)</div>
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Live agent if cannot resolve</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── LOYALTY ─── -->
+    <section class="section" id="loyalty">
+      <div class="section-title"><span>⭐</span> Loyalty Points</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">⭐</div>
+          <div class="flow-card-header-text">
+            <h3>Loyalty Points & Stamps</h3>
+          </div>
+        </div>
+        <div class="flow-card-body">
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Where are my loyalty points?"</span>
+              <span class="tag">"Didn't get my stamps"</span>
+              <span class="tag">"How do I redeem points?"</span>
+              <span class="tag">"My loyalty balance"</span>
+              <span class="tag">"Points not added"</span>
+            </div>
+          </div>
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-purple">1</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Chatbot explains loyalty rules and checks balance</div>
+                <div class="step-desc">Shows current points balance, explains how points are earned, and guides on redemption. If points are missing, escalates to live agent to investigate.</div>
+                <div class="outcomes">
+                  <div class="outcome border-purple c-purple"><span class="outcome-icon">ℹ️</span> Points info and balance shown</div>
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Live agent if points missing/dispute</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── GROUP ORDER ─── -->
+    <section class="section" id="group-order">
+      <div class="section-title"><span>👥</span> Group / Bulk Order</div>
+      <div class="section-desc">When a customer asks about placing a large or group order, event catering, or scheduled orders — the chatbot hands this to a specialist response or live agent.</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">👥</div>
+          <div class="flow-card-header-text">
+            <h3>Group, Bulk & Catering Orders</h3>
+            <p>Large orders, event catering, scheduled deliveries, corporate orders</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Group order for 20 people"</span>
+              <span class="tag">"Bulk order"</span>
+              <span class="tag">"Event catering"</span>
+              <span class="tag">"Order for a party"</span>
+              <span class="tag">"Corporate lunch order"</span>
+              <span class="tag">"Schedule a delivery"</span>
+              <span class="tag">"Timed pickup"</span>
+            </div>
+          </div>
+
+          <div class="callout border-teal" style="background:var(--teal-light);color:#0f766e;">
+            <div class="callout-icon">💡</div>
+            <div>
+              <div class="callout-title">Specialist handler</div>
+              Group/bulk orders are detected and routed to a specialist response system — the AI does NOT try to handle these with generic responses, which could give incorrect information.
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-teal">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Chatbot detects group/bulk order context</div>
+                <div class="step-desc">Keywords like "group", "bulk", "catering", "event", "schedule" trigger the specialist path.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-teal">2</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Specialist response or live agent</div>
+                <div class="outcomes">
+                  <div class="outcome border-teal c-teal"><span class="outcome-icon">📋</span> Specialist group order guidance provided</div>
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Live agent if further help needed</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── LIVE AGENT ─── -->
+    <section class="section" id="live-agent">
+      <div class="section-title"><span>👤</span> Live Agent Request</div>
+      <div class="section-desc">When a customer explicitly asks to speak with a human — the chatbot connects them immediately without trying to resolve anything first.</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">👤</div>
+          <div class="flow-card-header-text">
+            <h3>Direct Live Agent Request</h3>
+          </div>
+        </div>
+        <div class="flow-card-body">
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Talk to a human"</span>
+              <span class="tag">"Live agent please"</span>
+              <span class="tag">"Speak to someone"</span>
+              <span class="tag">"Real person"</span>
+              <span class="tag">"Customer service"</span>
+              <span class="tag">"Connect me"</span>
+            </div>
+          </div>
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-red" style="background:var(--brand)">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Immediately connected to live agent</div>
+                <div class="step-desc">No questions asked, no flow started. The customer is connected straight away.</div>
+                <div class="outcomes">
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Live agent connected</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-brand" style="background:var(--brand)">2</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Context-aware wait message shown</div>
+                <div class="step-desc">The message displayed while the customer waits is generated with full context — it references the specific order (e.g. <em>"#1234 from Spice Garden"</em>) and the type of issue (e.g. missing item, refund, complaint). Every live agent connection shows a different, relevant message — not a single generic string repeated everywhere.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">3</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">After live agent — context-aware re-entry</div>
+                <div class="step-desc">When a customer returns to the AI chatbot after a live agent session, the welcome-back message references what they were dealing with — it does not use a generic "Welcome back, how can I help?" opener. The AI generates a relevant, context-specific greeting based on the session issue history.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-box border-orange" style="background:var(--orange-light);color:var(--orange);margin-top:8px;">
+            <div class="info-box-icon">⚠️</div>
+            <div><strong>Live agent requests always bypass security checks.</strong> Even if the token budget is exceeded or the AI is rate-limited, the live agent connection path is always available to the customer.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── ACCOUNT ─── -->
+    <section class="section" id="account">
+      <div class="section-title"><span>👤</span> Account & Address</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">⚙️</div>
+          <div class="flow-card-header-text">
+            <h3>Account Management</h3>
+            <p>Address changes, account deletion, login issues, profile updates</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Change my delivery address"</span>
+              <span class="tag">"Delete my account"</span>
+              <span class="tag">"Can't log in"</span>
+              <span class="tag">"Update my profile"</span>
+              <span class="tag">"Save a new address"</span>
+            </div>
+          </div>
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-blue">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Chatbot identifies what account action is needed</div>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-blue">2</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Guided steps or confirmation</div>
+                <div class="branch-grid">
+                  <div class="branch-card border-blue c-blue">
+                    <div class="branch-card-label">Address change</div>
+                    Chatbot parses new address, shows it for confirmation, then saves.
+                  </div>
+                  <div class="branch-card border-red c-red">
+                    <div class="branch-card-label">Account deletion</div>
+                    Asks customer to type a confirmation word. Then processes deletion.
+                  </div>
+                  <div class="branch-card border-gray" style="border-color:var(--gray-border);color:var(--text-muted)">
+                    <div class="branch-card-label">Login / other issues</div>
+                    Guided steps shown. Live agent if unresolved.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── MENU ─── -->
+    <section class="section" id="menu">
+      <div class="section-title"><span>🍽️</span> Menu & Recommendations</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">🍽️</div>
+          <div class="flow-card-header-text">
+            <h3>Menu Help & Food Recommendations</h3>
+          </div>
+        </div>
+        <div class="flow-card-body">
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"What should I order?"</span>
+              <span class="tag">"Vegetarian options"</span>
+              <span class="tag">"Recommend something"</span>
+              <span class="tag">"What's good near me?"</span>
+              <span class="tag">"Halal options"</span>
+              <span class="tag">"Gluten free?"</span>
+            </div>
+          </div>
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Ask which restaurant (if not already known)</div>
+                <div class="msg-box">
+                  <div class="msg-label">Exact message shown</div>
+                  <div class="msg-text">Which **restaurant** do you want menu help with{area}? Reply with the **name** as it appears in your list (you can add a postcode if it helps).</div>
+                  <div class="msg-cond">Function: <code>buildMenuEnquiryAskRestaurantPrompt(postcodeHint)</code>. <code>{area}</code> = " ({postcode})" if a postcode is known, else empty.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">2</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Ask what they want to know</div>
+                <div class="msg-box">
+                  <div class="msg-label">Exact message shown</div>
+                  <div class="msg-text">What would you like to know about **{restaurantName}**'s menu?
+
+For example: allergens, halal, vegetarian options, calories, ingredients, spice level, or a **specific dish name**.</div>
+                  <div class="msg-cond">Function: <code>buildMenuEnquiryAskQuestionPrompt(restaurantName)</code>.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">3</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Answer depends on question type — 6 branches (<code>buildMenuEnquiryAnswer</code>)</div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Allergy / dietary question (matches /allerg|nut|dairy|gluten|sesame|shellfish|egg/)</div>
+                  <div class="msg-text">I am not able to confirm **{term}** options. If it's allergy-related, it's best to check with the restaurant before placing your order.
+
+Check the item's **description** and **add-ons notes** on the menu in the app.
+
+If you need any further help, let me know — I will connect you to our support team.{safetyFooter}</div>
+                  <div class="msg-cond"><code>{term}</code> is one of: gluten-free, nut-free, dairy-free, shellfish-free, sesame-free, egg-free, or "allergen" (from <code>extractAllergyTerm</code>). <code>{safetyFooter}</code> = "\n\n---\nContact **{storeName}** directly:\n**Phone:** {phone}\n**Email:** {email}" (or just "Contact **{storeName}** directly for confirmation." if neither phone nor email is known).</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Halal / kosher question</div>
+                  <div class="msg-text">**Halal / kosher** status is set by **{storeName}**. Check dish descriptions and labels in the menu; when in doubt, **ask the store** before ordering.{safetyFooter}</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Calorie / nutrition question</div>
+                  <div class="msg-text">**Calorie or nutrition** values are only shown when the restaurant has added them to items in the app. I do not invent numbers — open the dish in the menu for details, or ask **{storeName}**.{safetyFooter}</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">No menu snapshot loaded for that store yet</div>
+                  <div class="msg-text">I do not have a **menu snapshot** loaded for **{storeName}** yet. Open that restaurant's **Menu** in the app and ask again, or contact them directly.</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Question didn't match any menu item</div>
+                  <div class="msg-text">I could not match that to items on **{storeName}**'s menu from what I have loaded. Try a **shorter dish name** or open **Menu** for that store.{safetyFooter}</div>
+                  <div class="msg-cond"><code>{safetyFooter}</code> only appended if the question was also safety-sensitive (allergy/halal/calorie).</div>
+                </div>
+
+                <div class="msg-box">
+                  <div class="msg-label">Matching menu items found</div>
+                  <div class="msg-text">Here is what I found on **{storeName}**'s menu that may relate to your question:
+
+{numbered list of matching items, name/category/price}
+
+Open a dish in the app for modifiers, allergens (if shown), and final pricing.{safetyFooter}</div>
+                </div>
+
+                <div class="outcomes" style="margin-top:4px;">
+                  <div class="outcome border-green c-green"><span class="outcome-icon">🍽️</span> Recommendation / menu answer given</div>
+                  <div class="outcome border-red c-red"><span class="outcome-icon">👤</span> Live agent if allergy/safety concern needs confirming</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── GENERAL ─── -->
+    <section class="section" id="general">
+      <div class="section-title"><span>💬</span> General / Greetings</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">👋</div>
+          <div class="flow-card-header-text">
+            <h3>Greetings, Thanks & General Chat</h3>
+          </div>
+        </div>
+        <div class="flow-card-body">
+          <div class="trigger-box">
+            <div class="trigger-box-label">Customer says things like…</div>
+            <div class="trigger-tags">
+              <span class="tag">"Hi"</span>
+              <span class="tag">"Hello"</span>
+              <span class="tag">"Thanks"</span>
+              <span class="tag">"App not working"</span>
+              <span class="tag">"I have feedback"</span>
+              <span class="tag">"How does this work?"</span>
+            </div>
+          </div>
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-gray">1</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Friendly AI response</div>
+                <div class="step-desc">Chatbot responds warmly, offers help, or guides the customer to the right area. App technical issues may be escalated to live agent if they can't be self-served.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── MULTI-INTENT ─── -->
+    <section class="section" id="multi-intent">
+      <div class="section-title"><span>🔀</span> Multiple Issues in One Message</div>
+      <div class="section-desc">When a customer mentions more than one issue in the same message, the chatbot handles them one at a time in a queue — without losing track of the others.</div>
+
+      <div class="flow-card">
+        <div class="flow-card-header">
+          <div class="flow-icon">🔀</div>
+          <div class="flow-card-header-text">
+            <h3>Multiple Issues (Multi-Intent Queue)</h3>
+            <p>Customer raises more than one problem at the same time</p>
+          </div>
+        </div>
+        <div class="flow-card-body">
+
+          <div class="trigger-box">
+            <div class="trigger-box-label">Examples of multi-intent messages…</div>
+            <div class="trigger-tags">
+              <span class="tag">"My order is late AND my voucher didn't work"</span>
+              <span class="tag">"Missing items and I want a refund"</span>
+              <span class="tag">"Item was wrong, also I have a question about my account"</span>
+            </div>
+          </div>
+
+          <div class="flowchart">
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-purple">1</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Chatbot detects multiple issues</div>
+                <div class="step-desc">AI identifies all the different problems mentioned and puts them in a queue.</div>
+                <div class="queue-viz">
+                  <div class="queue-item active">Issue 1: Late delivery</div>
+                  <div class="queue-arrow">→</div>
+                  <div class="queue-item">Issue 2: Voucher not working</div>
+                  <div class="queue-arrow">→</div>
+                  <div class="queue-item">Issue 3: Refund request</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-purple">2</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Handle Issue 1 completely</div>
+                <div class="step-desc">Full flow for the first issue runs to completion — resolution offered or live agent connected.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-purple">3</div>
+                <div class="step-line"></div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Ask if customer wants to address the next issue</div>
+                <div class="step-desc">Chatbot says: "We've sorted your delivery concern — would you also like help with your voucher?" Customer confirms, and the next flow starts.</div>
+              </div>
+            </div>
+
+            <div class="flow-step">
+              <div class="flow-step-left">
+                <div class="step-circle bg-green">4</div>
+              </div>
+              <div class="flow-step-right">
+                <div class="step-title">Each issue handled in turn</div>
+                <div class="step-desc">All issues in the queue are resolved one by one. If a live agent is needed mid-queue, the handoff is either done immediately or deferred until the current flow completes.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-box border-purple c-purple">
+            <div class="info-box-icon">💡</div>
+            <div><strong>Deferred live agent handoff:</strong> If the customer asks for a live agent while mid-way through another flow, the chatbot says "I'll connect you to a live agent after we've handled your current concern" — then does the handoff once the current flow finishes.</div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── FOOTER ─── -->
+    <div style="text-align:center;padding:40px 0 20px;color:var(--text-muted);font-size:13px;border-top:1px solid var(--gray-border);margin-top:40px;">
+      <strong>Chatbot Flow Documentation</strong> · Operations Reference · Last updated June 2026<br>
+      <span style="opacity:0.6;">For technical questions, contact the engineering team.</span>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
