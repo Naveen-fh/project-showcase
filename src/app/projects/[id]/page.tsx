@@ -204,10 +204,6 @@ const projectData: Record<string, any> = {
     ],
     video: 'https://drive.foodhub.com/external/file/v5qqacfcc1971a3604480975a7bb91f803504',
     repos: ['customer_app_2.0'],
-    demos: [
-      { label: 'Full Technical Guide', url: '/demos/chatbot.html' },
-      { label: 'Ops Flow Guide', url: '/demos/customer-app-2.0-chatbot.html' },
-    ],
     stats: {
       flows: '12 Guardrail Flows',
       model: 'GPT-4o-mini + RAG',
